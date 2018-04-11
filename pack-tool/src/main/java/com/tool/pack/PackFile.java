@@ -1,6 +1,7 @@
 package com.tool.pack;
 
 import com.common.file.FileUtil;
+import com.common.file.FileWriter;
 import com.common.utils.EmptyUtil;
 import com.common.utils.StrUtil;
 
@@ -25,6 +26,12 @@ public class PackFile {
             return false;
         }
 
+        // Read the source file
+        String[] lines = FileUtil.read(srcFile);
+        if (EmptyUtil.isEmpty(lines)) {
+            return false;
+        }
+
         // Analyse the source, find the depended files
         Set<String> dependedFileNameSet = null;
 
@@ -46,8 +53,6 @@ public class PackFile {
             }
         }
 
-        // Read the source file
-
         // Merge the depended files
         if (!EmptyUtil.isEmpty(dependedFileNameSet)) {
 
@@ -55,6 +60,6 @@ public class PackFile {
 
         // Save to dst file
         String dstFile = FileUtil.getOutputFile(srcFile, srcPath, dstPath);
-        return true;
+        return FileUtil.write(dstFile, lines);
     }
 }

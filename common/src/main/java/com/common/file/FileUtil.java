@@ -10,18 +10,52 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FileUtil {
+    /**
+     * Write file
+     * @param filePath
+     * @param lines
+     * @return
+     */
+    public static boolean write(String filePath, String[] lines) {
+        if (StrUtil.isEmpty(filePath)) {
+            return false;
+        }
+
+        FileWriter writer = new FileWriter(filePath, false);
+        if (!writer.open()) {
+            System.out.printf("Fail to create output file: %s\n", filePath);
+            return false;
+        }
+
+        // Write
+        if (!EmptyUtil.isEmpty(lines)) {
+            for (String line : lines) {
+                writer.writeLine(line);
+            }
+        }
+
+        // Close
+        writer.close();
+        return true;
+    }
+
+    /**
+     * Read file
+     * @param filePath
+     * @return
+     */
     public static String[] read(String filePath) {
         if (StrUtil.isEmpty(filePath)) {
             return null;
         }
 
-        FileReader reader = new FileReader(filePath);
+        FileReader reader = new FileReader(filePath, false);
         if (!reader.open()) {
             System.out.printf("Fail to open file: %s\n", filePath);
             return null;
         }
 
-        // read and update, then write
+        // read
         List<String> lines = new ArrayList<String>();
         String str;
         while ((str = reader.readLine()) != null) {
@@ -34,43 +68,6 @@ public class FileUtil {
         String[] strs = new String[lines.size()];
         lines.toArray(strs);
         return strs;
-    }
-
-    public static String getOutputFileName(File parent, File file, String fileExt, String newFileName, String newFolderName) {
-        if (file == null || parent == null) {
-            return null;
-        }
-        return getOutputFileName(parent, file.getName(), fileExt, newFileName, newFolderName);
-    }
-
-    public static String getOutputFileName(File parent, String fileName, String fileExt, String newFileName, String newFolderName) {
-        if (parent == null) {
-            return null;
-        }
-
-        String outputFileName = null;
-        if (parent.isDirectory()) {
-            // Prepare the folder firstly
-            String outputFolderName = String.format("%s%s", parent.getPath(), newFolderName);
-            File folder = new File(outputFolderName);
-            if (!folder.exists()) {
-                folder.mkdir();
-            }
-
-            // Output file name
-            outputFileName = String.format("%s\\%s", outputFolderName, fileName);
-        } else {
-            outputFileName = parent.getPath();
-        }
-
-        // Format the file name
-        if (!StrUtil.isEmpty(outputFileName)) {
-            if (!StrUtil.isEmpty(fileExt) && outputFileName.toLowerCase().endsWith(fileExt)) {
-                outputFileName = outputFileName.substring(0, outputFileName.length() - fileExt.length());
-            }
-            outputFileName = String.format("%s%s", outputFileName, newFileName);
-        }
-        return outputFileName;
     }
 
     /**

@@ -45,7 +45,6 @@ public class FileWriter {
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath), "UTF-8"));
         } catch (IOException e) {
             writer = null;
-            e.printStackTrace();
             System.out.println(e.getMessage());
         }
 
@@ -64,7 +63,6 @@ public class FileWriter {
         try {
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
             System.out.println(e.getMessage());
         } finally {
             writer = null;

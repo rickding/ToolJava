@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CsvUtil {
+    /**
+     * Save to list of values to csv file
+     * @param recordList
+     * @param csvFile
+     */
     public static void saveToFile(List<String[]> recordList, String csvFile) {
         if (recordList == null || recordList.size() <= 0 || StrUtil.isEmpty(csvFile)) {
             return;
