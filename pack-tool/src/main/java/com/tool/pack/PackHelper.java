@@ -43,7 +43,7 @@ public class PackHelper {
 
             // Process files
             for (File file : files) {
-                if ((new PackFile(file.getPath(), nameFileMap, srcPath, dstPath)).process()) {
+                if ((new PackFile(file.getPath(), nameFileMap, srcPath, dstPath, fileExt)).process()) {
                     fileList.add(file.getPath());
                 }
             }
