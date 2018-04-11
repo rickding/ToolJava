@@ -70,8 +70,49 @@ public class FileUtil {
             }
             outputFileName = String.format("%s%s", outputFileName, newFileName);
         }
-
         return outputFileName;
+    }
+
+    /**
+     * Format the output file: src file name, src path, dst path
+     * @return
+     */
+    public static String getOutputFile(String srcFile, String srcPath, String dstPath) {
+        return getOutputFile(srcFile, srcPath, dstPath, null);
+    }
+
+    public static String getOutputFile(String srcFile, String srcPath, String dstPath, String postfix) {
+        if (StrUtil.isEmpty(srcFile)) {
+            return null;
+        }
+
+        // Check the postfix
+        if (StrUtil.isEmpty(postfix)) {
+            postfix = "";
+        } else if (!postfix.startsWith("_") && !postfix.startsWith("-")) {
+            postfix = String.format("_%s", postfix);
+        }
+
+        // Check the dst
+        if (StrUtil.isEmpty(dstPath)) {
+            return String.format("%s%s", srcFile, StrUtil.isEmpty(postfix) ? "_pack" : postfix);
+        }
+
+        // Append the file name directly
+        File src = new File(srcFile);
+        String srcFileName = src.getName();
+        if (!StrUtil.isEmpty(srcPath)) {
+            // Remove the src path
+            int index = srcFile.toLowerCase().indexOf(srcPath.toLowerCase());
+            if (index >= 0) {
+                srcFileName = srcFile.substring(index + srcPath.length());
+            }
+        }
+        String dstFile = String.format("%s%s%s%s", dstPath, dstPath.endsWith("\\") || srcFileName.startsWith("\\") ? "" : "\\", srcFileName, postfix);
+        if (srcFile.trim().equalsIgnoreCase(dstFile.trim())) {
+            dstFile = String.format("%s_pack", dstFile);
+        }
+        return dstFile;
     }
 
     /**

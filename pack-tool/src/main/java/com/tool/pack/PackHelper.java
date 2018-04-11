@@ -14,14 +14,14 @@ import java.util.Map;
 public class PackHelper {
     private String fileExt = ".groovy";
 
-    public String[] process(String filePath) {
+    public String[] process(String filePath, String dstPath) {
         if (StrUtil.isEmpty(filePath)) {
             return null;
         }
-        return process(filePath, null);
+        return process(filePath, null, filePath, dstPath);
     }
 
-    private String[] process(String filePath, Map<String, String> parentNameFileMap) {
+    private String[] process(String filePath, Map<String, String> parentNameFileMap, String srcPath, String dstPath) {
         if (StrUtil.isEmpty(filePath)) {
             return null;
         }
@@ -43,7 +43,7 @@ public class PackHelper {
 
             // Process files
             for (File file : files) {
-                if ((new PackFile(file.getPath(), null, nameFileMap)).process()) {
+                if ((new PackFile(file.getPath(), nameFileMap, srcPath, dstPath)).process()) {
                     fileList.add(file.getPath());
                 }
             }
@@ -53,7 +53,7 @@ public class PackHelper {
         File[] folders = FileUtil.findSubFolders(filePath);
         if (!EmptyUtil.isEmpty(folders)) {
             for (File folder : folders) {
-                String[] fileArr = process(folder.getPath(), nameFileMap);
+                String[] fileArr = process(folder.getPath(), nameFileMap, srcPath, dstPath);
                 if (fileArr != null && fileArr.length > 0) {
                     fileList.addAll(Arrays.asList(fileArr));
                 }

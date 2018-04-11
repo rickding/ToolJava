@@ -1,5 +1,6 @@
 package com.tool.pack;
 
+import com.common.file.FileUtil;
 import com.common.utils.EmptyUtil;
 import com.common.utils.StrUtil;
 
@@ -8,13 +9,15 @@ import java.util.Set;
 
 public class PackFile {
     private String srcFile;
-    private String dstFile;
     private Map<String, String> nameFileMap;
+    private String srcPath;
+    private String dstPath;
 
-    public PackFile(String srcFile, String dstFile, Map<String, String> nameFileMap) {
+    public PackFile(String srcFile, Map<String, String> nameFileMap, String srcPath, String dstPath) {
         this.srcFile = srcFile;
-        this.dstFile = dstFile;
         this.nameFileMap = nameFileMap;
+        this.srcPath = srcPath;
+        this.dstPath = dstPath;
     }
 
     public boolean process() {
@@ -51,9 +54,7 @@ public class PackFile {
         }
 
         // Save to dst file
-        if (StrUtil.isEmpty(dstFile)) {
-            dstFile = String.format("%s_pack", srcFile);
-        }
+        String dstFile = FileUtil.getOutputFile(srcFile, srcPath, dstPath);
         return true;
     }
 }

@@ -1,15 +1,15 @@
 package com.tool.pack;
 
-import com.common.utils.EmptyUtil;
 import com.common.utils.DateUtil;
+import com.common.utils.EmptyUtil;
 import com.common.utils.StrUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Hello world!
@@ -19,23 +19,23 @@ public class App {
         System.out.println("Specify the script file or folder:");
 
         Date timeStart = new Date();
-        Set<String> filePaths = new HashSet<String>(){{
-            add("C:\\Work\\jira\\scriptrunner-samples\\jira\\src\\main\\groovy");
+        Map<String, String> filePaths = new HashMap<String, String>(){{
+            put("C:\\Work\\jira\\scriptrunner-samples\\jira\\src\\main\\groovy", "C:\\Work\\jira\\deploy\\jira");
         }};
 
         // Add the parameters
         if (!EmptyUtil.isEmpty(args)) {
             for (String arg : args) {
                 if (!StrUtil.isEmpty(arg)) {
-                    filePaths.add(arg);
+                    filePaths.put(arg, null);
                 }
             }
         }
 
         // Check the files and folders
         List<String> projects = new ArrayList<String>();
-        for (String filePath : filePaths) {
-            String[] files = (new PackHelper()).process(filePath);
+        for (String filePath : filePaths.keySet()) {
+            String[] files = (new PackHelper()).process(filePath, filePaths.get(filePath));
             if (files != null && files.length > 0) {
                 projects.addAll(Arrays.asList(files));
             }

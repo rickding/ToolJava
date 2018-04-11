@@ -1,12 +1,31 @@
-package com.common.utils;
+package com.common.file;
 
-import com.common.file.FileUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FileUtilTest {
+    @Test
+    public void testGetOutputFile() {
+        Map<String[], String> mapIO = new HashMap<String[], String>() {{
+            put(new String[]{null, null, null}, null);
+            put(new String[]{"a", null, null}, "a_pack");
+            put(new String[]{"a", ".\\", null}, "a_pack");
+            put(new String[]{"a", ".\\", ".\\dst"}, ".\\dst\\a");
+            put(new String[]{"a", ".\\src", ".\\dst"}, ".\\dst\\a");
+            put(new String[]{"src\\b\\a", ".\\src", ".\\dst"}, ".\\dst\\a");
+            put(new String[]{".\\src\\b\\a", ".\\src", ".\\dst"}, ".\\dst\\b\\a");
+        }};
+        for (Map.Entry<String[], String> io : mapIO.entrySet()) {
+            String[] i = io.getKey();
+            String ret = FileUtil.getOutputFile(i[0], i[1], i[2]);
+            Assert.assertEquals(io.getValue(), ret);
+        }
+    }
+
     @Test
     public void testFindSubFolders() {
         File[] ret = FileUtil.findSubFolders(".", true);
