@@ -42,14 +42,14 @@ public class App {
         }
 
         // Summary the information
+        for (String project : projects) {
+            System.out.println(project);
+        }
         System.out.printf("%d folders, %d files, start: %s, end: %s\n",
                 filePaths.size(),
                 projects.size(),
                 DateUtil.format(timeStart, "hh:mm:ss"),
                 DateUtil.format(new Date(), "hh:mm:ss")
         );
-        for (String project : projects) {
-            System.out.println(project);
-        }
     }
 }

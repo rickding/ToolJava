@@ -19,6 +19,7 @@ public class RedisUtilTest {
     @Test
     public void testSetGet() {
         if (!RedisUtil.isOpen()) {
+            System.out.println("Fail to open redis");
             return;
         }
 
