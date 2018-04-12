@@ -80,6 +80,9 @@ public class PackFile {
         boolean ret = true;
         if (!EmptyUtil.isEmpty(neededFileSet)) {
             for (PackFile file : neededFileSet) {
+                writer.writeLine("");
+                writer.writeLine(String.format("// File: %s.%s", file.packagePath, file.fileName));
+
                 if (!file.write(writer, writtenFileSet)) {
                     ret = false;
                 }
