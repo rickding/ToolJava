@@ -36,28 +36,62 @@ public class PackFile {
         this.filePath = filePath;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof PackFile)) {
+    /**
+     * Write to file, recursive to find the needed files while remove the duplicated ones
+     * @param filePath
+     * @return
+     */
+    public boolean write(String filePath) {
+        if (StrUtil.isEmpty(filePath)) {
             return false;
         }
-        PackFile item = (PackFile) obj;
-        if (StrUtil.isEmpty(filePath) && StrUtil.isEmpty(item.filePath)) {
-            return true;
-        }
-        if (StrUtil.isEmpty(filePath) || StrUtil.isEmpty(item.filePath)) {
+        FileWriter writer = new FileWriter(filePath, false);
+        if (!writer.open()) {
+            System.out.printf("Fail to create output file: %s\n", filePath);
             return false;
         }
-        return filePath.trim().equalsIgnoreCase(item.filePath.trim());
+
+        // Write
+        Set<PackFile> writtenFileSet = new HashSet<PackFile>();
+        write(writer, writtenFileSet);
+
+        // Close
+        writer.close();
+        return true;
+    }
+
+    private boolean write(FileWriter writer, Set<PackFile> writtenFileSet) {
+        if (writer == null || !writer.isOpen() || writtenFileSet == null) {
+            return false;
+        }
+
+        // Write
+        if (!writtenFileSet.contains(this)) {
+            writtenFileSet.add(this);
+            writer.writeLine(headerList);
+            writer.writeLines(lineArr);
+        } else {
+            System.out.printf("Ignore one duplicated file: %s\n", this.toString());
+        }
+
+        // Recursive the needed ones
+        boolean ret = true;
+        if (!EmptyUtil.isEmpty(neededFileSet)) {
+            for (PackFile file : neededFileSet) {
+                if (!file.write(writer, writtenFileSet)) {
+                    ret = false;
+                }
+            }
+        }
+        return ret;
     }
 
     /**
-     * Found the depended files and save to dst file
+     * Pack the depended files
      * @param fileMap
-     * @param dstFile
      * @return
      */
-    public boolean pack(Map<String, PackFile> fileMap, String dstFile) {
+    public boolean pack(Map<String, PackFile> fileMap) {
         if (StrUtil.isEmpty(filePath)) {
             return false;
         }
@@ -86,38 +120,13 @@ public class PackFile {
             headerList.add(0, "/**");
             headerList.add("*/");
         }
-
-        // Write to dst file
-        if (StrUtil.isEmpty(dstFile)) {
-            return true;
-        }
-        return write(dstFile);
-    }
-
-    private boolean write(String filePath) {
-        if (StrUtil.isEmpty(filePath)) {
-            return false;
-        }
-        FileWriter writer = new FileWriter(filePath, false);
-        if (!writer.open()) {
-            System.out.printf("Fail to create output file: %s\n", filePath);
-            return false;
-        }
-
-        // Write
-        writer.writeLine(headerList);
-        writer.writeLines(lineArr);
-        if (!EmptyUtil.isEmpty(neededFileSet)) {
-            for (PackFile file : neededFileSet) {
-                writer.writeLines(file.lineArr);
-            }
-        }
-
-        // Close
-        writer.close();
         return true;
     }
 
+    /**
+     * Scan and analyse
+     * @return
+     */
     public boolean scan() {
         if (StrUtil.isEmpty(filePath)) {
             return false;
@@ -231,6 +240,21 @@ public class PackFile {
 
     public String[] getClassNameArr() {
         return classNameArr;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof PackFile)) {
+            return false;
+        }
+        PackFile item = (PackFile) obj;
+        if (StrUtil.isEmpty(filePath) && StrUtil.isEmpty(item.filePath)) {
+            return true;
+        }
+        if (StrUtil.isEmpty(filePath) || StrUtil.isEmpty(item.filePath)) {
+            return false;
+        }
+        return filePath.trim().equalsIgnoreCase(item.filePath.trim());
     }
 
     @Override

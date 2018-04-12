@@ -13,7 +13,7 @@ import java.util.Map;
 public class PackHelper {
     private static final String fileExt = ".groovy";
     private static final String ignoredFileNamePattern = "((\\w*[Tt][Ee][Ss][Tt])|([Tt][Ee][Ss][Tt]\\w*)).groovy";
-    private static final String ignoredPackFileNamePattern = "\\w*(([Uu]tils*)|([Hh]elper)).groovy";
+    private static final String ignoredSaveFileNamePattern = "\\w*(([Uu]tils*)|([Hh]elper)).groovy";
 
     private String srcPath;
     private String dstPath;
@@ -70,15 +70,20 @@ public class PackHelper {
         // Pack secondly
         List<String> fileNameList = new ArrayList<String>();
         for (PackFile file : fileList) {
-            if (!StrUtil.matches(file.getFileName(), ignoredPackFileNamePattern)) {
-                String dstFile = FileUtil.getOutputFile(file.getFilePath(), srcPath, dstPath);
-                boolean ret = file.pack(fileMap, dstFile);
-                fileNameList.add(String.format("%s: Src: %s, dst: %s", ret ? "Success" : "Fail", file.toString(), dstFile));
+            boolean ret = file.pack(fileMap);
+            if (!ret) {
+                fileNameList.add(String.format("Fail to pack: %s", file.toString()));
             }
         }
 
         // Write to file
-
+        for (PackFile file : fileList) {
+            if (!StrUtil.matches(file.getFileName(), ignoredSaveFileNamePattern)) {
+                String dstFile = FileUtil.getOutputFile(file.getFilePath(), srcPath, dstPath);
+                boolean ret = file.write(dstFile);
+                fileNameList.add(String.format("%s to write: %s, dst: %s", ret ? "Success" : "Fail", file.toString(), dstFile));
+            }
+        }
 
         // Convert to array
         if (fileNameList.size() <= 0) {

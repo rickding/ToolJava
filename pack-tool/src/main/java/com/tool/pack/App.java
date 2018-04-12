@@ -20,8 +20,8 @@ public class App {
 
         Date timeStart = new Date();
         Map<String, String> filePaths = new HashMap<String, String>(){{
-//            put("C:\\Work\\jira\\scriptrunner-samples\\jira\\src\\main\\groovy", "C:\\Work\\jira\\deploy\\jira");
-            put("C:\\Work\\jira\\scriptrunner-samples\\jira\\src\\main\\groovy\\com\\erp\\approve2", "C:\\Work\\jira\\deploy\\jira\\com\\erp\\approve2");
+            put("C:\\Work\\jira\\scriptrunner-samples\\jira\\src\\main\\groovy", "C:\\Work\\jira\\deploy\\jira");
+//            put("C:\\Work\\jira\\scriptrunner-samples\\jira\\src\\main\\groovy\\com\\erp\\approve2", "C:\\Work\\jira\\deploy\\jira\\com\\erp\\approve2");
         }};
 
         // Add the parameters
