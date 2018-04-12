@@ -45,6 +45,8 @@ public class PackFile {
         if (StrUtil.isEmpty(filePath)) {
             return false;
         }
+
+        FileUtil.mkdirs(filePath);
         FileWriter writer = new FileWriter(filePath, false);
         if (!writer.open()) {
             System.out.printf("Fail to create output file: %s\n", filePath);

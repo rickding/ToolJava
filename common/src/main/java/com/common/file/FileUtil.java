@@ -10,6 +10,28 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FileUtil {
+    public static boolean mkdirs(String filePath) {
+        if (StrUtil.isEmpty(filePath)) {
+            return false;
+        }
+
+        // Check exist or not
+        File file = new File(filePath);
+        if (file.exists()) {
+            return true;
+        }
+
+        // Create parent directory
+        boolean ret = file.getParentFile().mkdirs();
+        if (ret) {
+            // Create the last folder
+            if (file.isDirectory()) {
+                return file.mkdirs();
+            }
+        }
+        return ret;
+    }
+
     /**
      * Write file
      * @param filePath
