@@ -1,5 +1,6 @@
 package com.common.utils;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,6 +10,10 @@ import java.util.Set;
 public class EmptyUtil {
     public static <T> boolean isEmpty(T[] arr) {
         return arr == null || arr.length <= 0;
+    }
+
+    public static <T> boolean isEmpty(List<T> list) {
+        return list == null || list.size() <= 0;
     }
 
     public static <T> boolean isEmpty(Set<T> set) {

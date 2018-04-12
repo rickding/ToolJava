@@ -73,27 +73,16 @@ public class FileWriter {
         }
     }
 
-    public void writeLine(List<String> strList) {
+    public void writeLines(List<String[]> strs) {
         if (!isOpen()) {
             System.out.println("Please call open() firstly.");
             return;
         }
 
-        if (strList == null || strList.size() <= 0) {
-            return;
-        }
-
-        for (String str : strList) {
-            writeLine(str);
-        }
-    }
-
-    public void writeLines(List<String[]> strs) {
-        if (strs == null || strs.size() <= 0) {
-            return;
-        }
-        for (String[] str : strs) {
-            writeLines(str);
+        if (!EmptyUtil.isEmpty(strs)) {
+            for (String[] str : strs) {
+                writeLines(str);
+            }
         }
     }
 
@@ -103,12 +92,23 @@ public class FileWriter {
             return;
         }
 
-        if (EmptyUtil.isEmpty(strs)) {
+        if (!EmptyUtil.isEmpty(strs)) {
+            for (String str : strs) {
+                writeLine(str);
+            }
+        }
+    }
+
+    public void writeLine(List<String> strList) {
+        if (!isOpen()) {
+            System.out.println("Please call open() firstly.");
             return;
         }
 
-        for (String str : strs) {
-            writeLine(str);
+        if (!EmptyUtil.isEmpty(strList)) {
+            for (String str : strList) {
+                writeLine(str);
+            }
         }
     }
 
@@ -119,7 +119,6 @@ public class FileWriter {
         }
 
         write(str);
-
         try {
             writer.write("\r\n");
         } catch (IOException e) {

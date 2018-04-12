@@ -6,66 +6,86 @@ import com.common.utils.StrUtil;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class PackHelper {
-    private String fileExt = ".groovy";
+    private static final String fileExt = ".groovy";
+    private static final String ignoredFileNamePattern = "((\\w*[Tt][Ee][Ss][Tt])|([Tt][Ee][Ss][Tt]\\w*)).groovy";
+    private static final String ignoredPackFileNamePattern = "\\w*(([Uu]tils*)|([Hh]elper)).groovy";
 
-    public String[] process(String filePath, String dstPath) {
-        if (StrUtil.isEmpty(filePath)) {
-            return null;
-        }
-        return process(filePath, null, filePath, dstPath);
+    private String srcPath;
+    private String dstPath;
+
+    public PackHelper(String srcPath, String dstPath) {
+        this.srcPath = srcPath;
+        this.dstPath = dstPath;
     }
 
-    private String[] process(String filePath, Map<String, String> parentNameFileMap, String srcPath, String dstPath) {
-        if (StrUtil.isEmpty(filePath)) {
+    public String[] process() {
+        if (StrUtil.isEmpty(srcPath)) {
             return null;
         }
 
-        // Map the file name. The later one from sub folder will override the previous one.
-        // Note the same level of sub folders will not override each other.
-        Map<String, String> nameFileMap = new HashMap<String, String>();
-        if (parentNameFileMap != null && parentNameFileMap.size() > 0) {
-            nameFileMap.putAll(parentNameFileMap);
-        }
-
-        List<String> fileList = new ArrayList<String>();
-        File[] files = FileUtil.findFiles(filePath, fileExt);
-        if (!EmptyUtil.isEmpty(files)) {
-            // Map firstly
-            for (File file : files) {
-                nameFileMap.put(file.getName().toLowerCase(), file.getPath());
-            }
-
-            // Process files
-            for (File file : files) {
-                if ((new PackFile(file.getPath(), nameFileMap, srcPath, dstPath, fileExt)).process()) {
-                    fileList.add(file.getPath());
+        // Get the files
+        List<PackFile> fileList = new ArrayList<PackFile>();
+        File[] fileArr = FileUtil.findFiles(srcPath, fileExt, true);
+        if (!EmptyUtil.isEmpty(fileArr)) {
+            for (File file : fileArr) {
+                if (!StrUtil.matches(file.getName(), ignoredFileNamePattern)) {
+                    fileList.add(new PackFile(file.getPath()));
                 }
             }
         }
-
-        // subFolders
-        File[] folders = FileUtil.findSubFolders(filePath);
-        if (!EmptyUtil.isEmpty(folders)) {
-            for (File folder : folders) {
-                String[] fileArr = process(folder.getPath(), nameFileMap, srcPath, dstPath);
-                if (fileArr != null && fileArr.length > 0) {
-                    fileList.addAll(Arrays.asList(fileArr));
-                }
-            }
-        }
-
-        // Convert to array
         if (fileList.size() <= 0) {
             return null;
         }
-        String[] fileArr = new String[fileList.size()];
-        fileList.toArray(fileArr);
-        return fileArr;
+
+        // Scan firstly
+        Map<String, PackFile> fileMap = new HashMap<String, PackFile>();
+        for (PackFile file : fileList) {
+            // Analyse the information
+            if (file.scan()) {
+                // package + class name
+                String[] classNameArr = file.getClassNameArr();
+                if (!EmptyUtil.isEmpty(classNameArr)) {
+                    for (String className : classNameArr) {
+                        fileMap.put(String.format("%s.%s", file.getPackagePath(), className), file);
+                    }
+                }
+
+                // file path - base src path + file name with ext
+                String fileName = FileUtil.getFileName(file.getFilePath(), srcPath);
+                fileMap.put(FileUtil.appendFileExt(fileName, fileExt), file);
+                fileMap.put(FileUtil.removeFileExt(fileName, fileExt), file);
+
+                // file name with ext
+                fileName = file.getFileName();
+                fileMap.put(FileUtil.appendFileExt(fileName, fileExt), file);
+                fileMap.put(FileUtil.removeFileExt(fileName, fileExt), file);
+            }
+        }
+
+        // Pack secondly
+        List<String> fileNameList = new ArrayList<String>();
+        for (PackFile file : fileList) {
+            if (!StrUtil.matches(file.getFileName(), ignoredPackFileNamePattern)) {
+                String dstFile = FileUtil.getOutputFile(file.getFilePath(), srcPath, dstPath);
+                boolean ret = file.pack(fileMap, dstFile);
+                fileNameList.add(String.format("%s: Src: %s, dst: %s", ret ? "Success" : "Fail", file.toString(), dstFile));
+            }
+        }
+
+        // Write to file
+
+
+        // Convert to array
+        if (fileNameList.size() <= 0) {
+            return null;
+        }
+        String[] fileNameArr = new String[fileNameList.size()];
+        fileNameList.toArray(fileNameArr);
+        return fileNameArr;
     }
 }

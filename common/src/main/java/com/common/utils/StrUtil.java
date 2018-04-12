@@ -1,11 +1,29 @@
 package com.common.utils;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by user on 2017/9/23.
  */
 public class StrUtil {
     public static boolean isEmpty(String str) {
         return str == null || str.trim().length() <= 0;
+    }
+
+    /**
+     * Match the part of version to the corresponding pattern
+     * @param str
+     * @param pattern
+     * @return
+     */
+    public static boolean matches(String str, String pattern) {
+        if (isEmpty(str) || isEmpty(pattern)) {
+            return false;
+        }
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(str);
+        return m.matches();
     }
 
     public static boolean contains(String str, String subStr) {

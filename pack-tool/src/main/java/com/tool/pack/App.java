@@ -20,8 +20,8 @@ public class App {
 
         Date timeStart = new Date();
         Map<String, String> filePaths = new HashMap<String, String>(){{
-            put("C:\\Work\\jira\\scriptrunner-samples\\jira\\src\\main\\groovy", "C:\\Work\\jira\\deploy\\jira");
-//            put("C:\\Work\\jira\\scriptrunner-samples\\jira\\src\\main\\groovy\\com\\erp\\approve2", "C:\\Work\\jira\\deploy\\jira\\com\\erp\\approve2");
+//            put("C:\\Work\\jira\\scriptrunner-samples\\jira\\src\\main\\groovy", "C:\\Work\\jira\\deploy\\jira");
+            put("C:\\Work\\jira\\scriptrunner-samples\\jira\\src\\main\\groovy\\com\\erp\\approve2", "C:\\Work\\jira\\deploy\\jira\\com\\erp\\approve2");
         }};
 
         // Add the parameters
@@ -36,7 +36,7 @@ public class App {
         // Check the files and folders
         List<String> projects = new ArrayList<String>();
         for (String filePath : filePaths.keySet()) {
-            String[] files = (new PackHelper()).process(filePath, filePaths.get(filePath));
+            String[] files = (new PackHelper(filePath, filePaths.get(filePath))).process();
             if (files != null && files.length > 0) {
                 projects.addAll(Arrays.asList(files));
             }

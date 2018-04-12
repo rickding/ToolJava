@@ -71,7 +71,63 @@ public class FileUtil {
     }
 
     /**
-     * Format the output file: src file name, src path, dst path
+     * Add or remove file ext
+     * @param fileName
+     * @param fileExt
+     * @return
+     */
+    public static String appendFileExt(String fileName, String fileExt) {
+        if (StrUtil.isEmpty(fileName)) {
+            return null;
+        }
+        fileName = fileName.trim();
+        if (!StrUtil.isEmpty(fileExt) && !fileName.toLowerCase().endsWith(fileExt.toLowerCase())) {
+            fileName = String.format("%s%s", fileName, fileExt);
+        }
+        return fileName;
+    }
+
+    public static String removeFileExt(String fileName, String fileExt) {
+        if (StrUtil.isEmpty(fileName)) {
+            return null;
+        }
+        fileName = fileName.trim();
+        if (!StrUtil.isEmpty(fileExt) && fileName.endsWith(fileExt.toLowerCase())) {
+            fileName = fileName.substring(0, fileName.length() - fileExt.length());
+        }
+        return fileName;
+    }
+
+    /**
+     * Return the name with sub path: filePath - baseBath
+     * @param filePath
+     * @return
+     */
+    public static String getFileName(String filePath) {
+        return getFileName(filePath, null);
+    }
+
+    public static String getFileName(String filePath, String basePath) {
+        if (StrUtil.isEmpty(filePath)) {
+            return null;
+        }
+
+        // Append the file name directly
+        File src = new File(filePath);
+        String fileName = src.getName();
+        if (!StrUtil.isEmpty(basePath)) {
+            // Remove the base path
+            basePath = basePath.trim().toLowerCase();
+            int index = filePath.toLowerCase().indexOf(basePath);
+            if (index >= 0) {
+                fileName = filePath.substring(index + basePath.length());
+            }
+        }
+        return fileName;
+    }
+
+    /**
+     * Format the output file: remove the base src path, append to dst path.
      * @return
      */
     public static String getOutputFile(String srcFile, String srcPath, String dstPath) {
@@ -96,16 +152,8 @@ public class FileUtil {
         }
 
         // Append the file name directly
-        File src = new File(srcFile);
-        String srcFileName = src.getName();
-        if (!StrUtil.isEmpty(srcPath)) {
-            // Remove the src path
-            int index = srcFile.toLowerCase().indexOf(srcPath.toLowerCase());
-            if (index >= 0) {
-                srcFileName = srcFile.substring(index + srcPath.length());
-            }
-        }
-        String dstFile = String.format("%s%s%s%s", dstPath, dstPath.endsWith("\\") || srcFileName.startsWith("\\") ? "" : "\\", srcFileName, postfix);
+        String fileName = getFileName(srcFile, srcPath);
+        String dstFile = String.format("%s%s%s%s", dstPath, dstPath.endsWith("\\") || fileName.startsWith("\\") ? "" : "\\", fileName, postfix);
         if (srcFile.trim().equalsIgnoreCase(dstFile.trim())) {
             dstFile = String.format("%s_pack", dstFile);
         }

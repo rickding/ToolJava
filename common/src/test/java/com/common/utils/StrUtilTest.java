@@ -11,6 +11,29 @@ import java.util.Map;
  */
 public class StrUtilTest {
     @Test
+    public void testMatches() {
+        Map<String[], Boolean> mapIO = new HashMap<String[], Boolean>() {{
+            put(new String[]{null, null}, false);
+            put(new String[]{"AbcTestC.groovy", "((\\w*[Tt][Ee][Ss][Tt])|([Tt][Ee][Ss][Tt]\\w*)).groovy"}, false);
+            put(new String[]{"AbcTest.groovy", "((\\w*[Tt][Ee][Ss][Tt])|([Tt][Ee][Ss][Tt]\\w*)).groovy"}, true);
+            put(new String[]{"TestC.groovy", "((\\w*[Tt][Ee][Ss][Tt])|([Tt][Ee][Ss][Tt]\\w*)).groovy"}, true);
+            put(new String[]{"Utils.groovy", "\\w*(([Uu]tils*)|([Hh]elper)).groovy"}, true);
+            put(new String[]{"StrUtil.groovy", "\\w*(([Uu]tils*)|([Hh]elper)).groovy"}, true);
+            put(new String[]{"utils.groovy", "\\w*(([Uu]tils*)|([Hh]elper)).groovy"}, true);
+            put(new String[]{"util.groovy", "\\w*(([Uu]tils*)|([Hh]elper)).groovy"}, true);
+            put(new String[]{"uti.groovy", "\\w*(([Uu]tils*)|([Hh]elper)).groovy"}, false);
+            put(new String[]{"Helper.groovy", "\\w*(([Uu]tils*)|([Hh]elper)).groovy"}, true);
+            put(new String[]{"IssueHelper.groovy", "\\w*(([Uu]tils*)|([Hh]elper)).groovy"}, true);
+            put(new String[]{"HelperVer.groovy", "\\w*(([Uu]tils*)|([Hh]elper)).groovy"}, false);
+        }};
+        for (Map.Entry<String[], Boolean> io : mapIO.entrySet()) {
+            String[] params = io.getKey();
+            boolean ret = StrUtil.matches(params[0], params[1]);
+            Assert.assertEquals(io.getValue(), ret);
+        }
+    }
+
+    @Test
     public void testIsEmpty() {
         Map<String, Boolean> mapIO = new HashMap<String, Boolean>() {{
             put(null, true);
