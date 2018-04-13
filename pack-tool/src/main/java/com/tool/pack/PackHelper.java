@@ -13,7 +13,7 @@ import java.util.Map;
 public class PackHelper {
     private static final String fileExt = ".groovy";
     private static final String ignoredFileNamePattern = "((\\w*[Tt][Ee][Ss][Tt])|([Tt][Ee][Ss][Tt]\\w*)).groovy";
-    private static final String ignoredSaveFileNamePattern = "\\w*(([Uu]tils*)|([Hh]elper)).groovy";
+    private static final String excludePackFileNamePattern = "((\\w*(([Uu]tils*)|([Hh]elper)|([Cc]onfig)))|(Team)).groovy";
 
     private String srcPath;
     private String dstPath;
@@ -78,7 +78,7 @@ public class PackHelper {
 
         // Write to file
         for (PackFile file : fileList) {
-            if (!StrUtil.matches(file.getFileName(), ignoredSaveFileNamePattern)) {
+            if (!StrUtil.matches(file.getFileName(), excludePackFileNamePattern)) {
                 String dstFile = FileUtil.getOutputFile(file.getFilePath(), srcPath, dstPath);
                 boolean ret = file.write(dstFile);
                 fileNameList.add(String.format("%s to write: %s, dst: %s", ret ? "Success" : "Fail", file.toString(), dstFile));
