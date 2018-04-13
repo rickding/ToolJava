@@ -38,6 +38,7 @@ public class PackFile {
 
     /**
      * Write to file, recursive to find the needed files while remove the duplicated ones
+     *
      * @param filePath
      * @return
      */
@@ -72,8 +73,6 @@ public class PackFile {
         if (!writtenFileSet.contains(this)) {
             writtenFileSet.add(this);
             writeItself = true;
-        } else {
-            System.out.printf("Ignore one duplicated file: %s\n", this.toString());
         }
 
         // Recursive the needed ones
@@ -88,16 +87,19 @@ public class PackFile {
             }
         }
 
+        writer.writeLine(String.format("// File: %s.%s", packagePath, fileName));
         if (writeItself) {
-            writer.writeLine(String.format("// File: %s.%s", packagePath, fileName));
             writer.writeLine(headerList);
             writer.writeLines(lineArr);
+        } else {
+            writer.writeLine("// Duplicated, ignore.");
         }
         return ret;
     }
 
     /**
      * Pack the depended files
+     *
      * @param fileMap
      * @return
      */
@@ -118,10 +120,16 @@ public class PackFile {
                 if (!EmptyUtil.isEmpty(fileNameArr)) {
                     for (String fileName : fileNameArr) {
                         boolean found = fileMap.containsKey(fileName);
-                        headerList.add(String.format("* %sFound: %s", found ? "" : "Not ", fileName));
+                        boolean duplicated = false;
                         if (found) {
-                            neededFileSet.add(fileMap.get(fileName));
+                            PackFile file = fileMap.get(fileName);
+                            if (neededFileSet.contains(file)) {
+                                duplicated = true;
+                            } else {
+                                neededFileSet.add(file);
+                            }
                         }
+                        headerList.add(String.format("* %sFound: %s%s", found ? "" : "Not ", fileName, duplicated ? " Duplicated" : ""));
                     }
                 }
             }
@@ -135,6 +143,7 @@ public class PackFile {
 
     /**
      * Scan and analyse
+     *
      * @return
      */
     public boolean scan() {
@@ -198,7 +207,7 @@ public class PackFile {
                 if (line.startsWith(classFlag)) {
                     // Get the class name
                     String className = line.substring(classFlag.length()).trim();
-                    if(!StrUtil.isEmpty(className)) {
+                    if (!StrUtil.isEmpty(className)) {
                         // Remove the ending
                         for (String endingFlag : classEndingFlagArr) {
                             int endingIndex = className.indexOf(endingFlag);
