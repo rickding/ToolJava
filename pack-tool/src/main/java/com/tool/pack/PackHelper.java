@@ -13,7 +13,7 @@ import java.util.Map;
 public class PackHelper {
     private static final String fileExt = ".groovy";
     private static final String ignoredFileNamePattern = "((\\w*[Tt][Ee][Ss][Tt])|([Tt][Ee][Ss][Tt]\\w*)).groovy";
-    private static final String excludePackFileNamePattern = "((\\w*(([Uu]tils*)|([Hh]elper)|([Cc]onfig)))|(Team)).groovy";
+    private static final String excludePackFileNamePattern = "((\\w*(([Uu]tils*)|([Hh]elper)|([Cc]onfig)))|(Team)|(Plan)).groovy";
 
     private String srcPath;
     private String dstPath;

@@ -28,7 +28,7 @@ public class PackFile {
     private final static String packageFlag = "package ";
     private final static String importFlag = "import ";
     private final static String localImportFlag = "import com.erp.";
-    private final static String neededFileFlag = "* Note: need ";
+    private final static String[] neededFileFlagArr = {"* Note: need ", "* Note: Need ", "Note: need ", "Note: Need "};
     private final static String[] classFlagArr = {"class ", "public class "};
     private final static String[] classEndingFlagArr = {" ", "{"};
 
@@ -193,12 +193,19 @@ public class PackFile {
             }
 
             // Check the class name
-            if (line.startsWith(neededFileFlag)) {
-                // Get the file name
-                String fileName = line.substring(neededFileFlag.length()).trim();
-                if (!StrUtil.isEmpty(fileName)) {
-                    neededFileNameList.add(fileName);
+            boolean processed = false;
+            for (String neededFileFlag : neededFileFlagArr) {
+                if (line.startsWith(neededFileFlag)) {
+                    // Get the file name
+                    String fileName = line.substring(neededFileFlag.length()).trim();
+                    if (!StrUtil.isEmpty(fileName)) {
+                        neededFileNameList.add(fileName);
+                    }
+                    processed = true;
+                    break;
                 }
+            }
+            if (processed) {
                 continue;
             }
 
@@ -218,8 +225,12 @@ public class PackFile {
                         }
                         classNameList.add(className);
                     }
+                    processed = true;
                     break;
                 }
+            }
+            if (processed) {
+                continue;
             }
         }
 
