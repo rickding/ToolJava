@@ -68,10 +68,10 @@ public class PackFile {
         }
 
         // Write
+        boolean writeItself = false;
         if (!writtenFileSet.contains(this)) {
             writtenFileSet.add(this);
-            writer.writeLine(headerList);
-            writer.writeLines(lineArr);
+            writeItself = true;
         } else {
             System.out.printf("Ignore one duplicated file: %s\n", this.toString());
         }
@@ -80,13 +80,18 @@ public class PackFile {
         boolean ret = true;
         if (!EmptyUtil.isEmpty(neededFileSet)) {
             for (PackFile file : neededFileSet) {
-                writer.writeLine("");
-                writer.writeLine(String.format("// File: %s.%s", file.packagePath, file.fileName));
-
                 if (!file.write(writer, writtenFileSet)) {
                     ret = false;
+                } else {
+                    writer.writeLine("");
                 }
             }
+        }
+
+        if (writeItself) {
+            writer.writeLine(String.format("// File: %s.%s", packagePath, fileName));
+            writer.writeLine(headerList);
+            writer.writeLines(lineArr);
         }
         return ret;
     }
