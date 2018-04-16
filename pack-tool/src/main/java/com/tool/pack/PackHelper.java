@@ -12,8 +12,18 @@ import java.util.Map;
 
 public class PackHelper {
     private static final String fileExt = ".groovy";
-    private static final String ignoredFileNamePattern = "((\\w*[Tt][Ee][Ss][Tt])|([Tt][Ee][Ss][Tt]\\w*)).groovy";
-    private static final String excludePackFileNamePattern = "((\\w*(([Uu]tils*)|([Hh]elper)|([Cc]onfig)))|(Team)|(Plan)).groovy";
+    private static final String[] ignoredFileNamePatternArr = {
+            "\\w*[Tt][Ee][Ss][Tt].groovy",
+            "[Tt][Ee][Ss][Tt]\\w*.groovy",
+    };
+    private static final String[] excludeFileNamePatternArr = {
+            "\\w*[Uu]tils*.groovy",
+            "\\w*[Hh]elper.groovy",
+            "\\w*[Cc]onfig.groovy",
+            "Team.groovy",
+            "Plan.groovy",
+            "Issue((Item)|(Links*)).groovy",
+    };
 
     private String srcPath;
     private String dstPath;
@@ -33,7 +43,14 @@ public class PackHelper {
         File[] fileArr = FileUtil.findFiles(srcPath, fileExt, true);
         if (!EmptyUtil.isEmpty(fileArr)) {
             for (File file : fileArr) {
-                if (!StrUtil.matches(file.getName(), ignoredFileNamePattern)) {
+                boolean ignored = false;
+                for (String pattern : ignoredFileNamePatternArr) {
+                    if (StrUtil.matches(file.getName(), pattern)) {
+                        ignored = true;
+                        break;
+                    }
+                }
+                if (!ignored) {
                     fileList.add(new PackFile(file.getPath()));
                 }
             }
@@ -78,7 +95,14 @@ public class PackHelper {
 
         // Write to file
         for (PackFile file : fileList) {
-            if (!StrUtil.matches(file.getFileName(), excludePackFileNamePattern)) {
+            boolean excluded = false;
+            for (String pattern : excludeFileNamePatternArr) {
+                if (StrUtil.matches(file.getFileName(), pattern)) {
+                    excluded = true;
+                    break;
+                }
+            }
+            if (!excluded) {
                 String dstFile = FileUtil.getOutputFile(file.getFilePath(), srcPath, dstPath);
                 boolean ret = file.write(dstFile);
                 fileNameList.add(String.format("%s to write: %s, dst: %s", ret ? "Success" : "Fail", file.toString(), dstFile));
