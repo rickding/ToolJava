@@ -15,15 +15,47 @@ import java.util.Map;
  * Created by user on 2017/9/23.
  */
 public class DateUtilTest {
-    protected List<String> dateFormatList = new ArrayList<String>() {{
-        add("yyyy/MM/dd HH:mm:ss");
-        add("yyyy/MM/dd HH:mm a");
-        add("yyyy/MM/dd HH:mm");
-        add("yyyy/MM/dd");
-        add("yyyy-MM-dd HH:mm:ss");
-        add("yyyy-MM-dd HH:mm");
-        add("yyyy-MM-dd");
-    }};
+    @Test
+    public void testGetSprintDate() {
+        Map<String, String> mapIO = new HashMap<String, String>() {{
+            put(null, "");
+            put("", "");
+            put("2018-04-16 13:00:00", "2018-04-22 00:00:00");
+            put("2018-04-15 13:00:00", "2018-04-22 00:00:00");
+            put("2018-04-15 12:00:00", "2018-04-22 00:00:00");
+            put("2018-04-14 12:00:00", "2018-04-15 00:00:00");
+            put("2018-04-14 11:00:00", "2018-04-15 00:00:00");
+            put("2018-04-13 13:00:00", "2018-04-15 00:00:00");
+            put("2018-04-12 12:00:00", "2018-04-15 00:00:00");
+            put("2018-04-11 11:00:00", "2018-04-15 00:00:00");
+            put("2018-04-10 10:00:00", "2018-04-15 00:00:00");
+            put("2018-04-09 12:00:00", "2018-04-15 00:00:00");
+        }};
+        for (String key : mapIO.keySet()) {
+            String ret = DateUtil.format(DateUtil.getSprintDate(DateUtil.parse(key, "yyyy-MM-dd HH:mm:ss")), "yyyy-MM-dd HH:mm:ss");
+            Assert.assertEquals(mapIO.get(key), ret);
+        }
+    }
+
+    @Test
+    public void testIsWeekend() {
+        Map<String, Boolean> mapIO = new HashMap<String, Boolean>() {{
+            put(null, false);
+            put("", false);
+            put("2018-04-16 00:00:00", false);
+            put("2018-04-15 12:00:00", true);
+            put("2018-04-14 00:00:00", true);
+            put("2018-04-13 12:00:00", false);
+            put("2018-04-12 00:00:00", false);
+            put("2018-04-11 12:00:00", false);
+            put("2018-04-10 00:00:00", false);
+            put("2018-04-09 12:00:00", false);
+        }};
+        for (String key : mapIO.keySet()) {
+            boolean ret = DateUtil.isWeekend(DateUtil.parse(key, "yyyy-MM-dd HH:mm:ss"));
+            Assert.assertEquals(mapIO.get(key), ret);
+        }
+    }
 
     @Test
     public void testParseDate() {
@@ -35,6 +67,15 @@ public class DateUtilTest {
             put("2017-12-04 10:12:55", "2017-12-04"); // from DB
         }};
 
+        List<String> dateFormatList = new ArrayList<String>() {{
+            add("yyyy/MM/dd HH:mm:ss");
+            add("yyyy/MM/dd HH:mm a");
+            add("yyyy/MM/dd HH:mm");
+            add("yyyy/MM/dd");
+            add("yyyy-MM-dd HH:mm:ss");
+            add("yyyy-MM-dd HH:mm");
+            add("yyyy-MM-dd");
+        }};
         String[] formatArray = new String[dateFormatList.size()];
         dateFormatList.toArray(formatArray);
 
@@ -46,7 +87,7 @@ public class DateUtilTest {
 
     @Test
     public void testDayOfWeek() {
-        Map<String, Integer> mapIO = new HashMap<String, Integer>(){{
+        Map<String, Integer> mapIO = new HashMap<String, Integer>() {{
             put("", 0);
             put("", 0);
             put("yyyy/MM/dd HH:mm", 0);
@@ -66,7 +107,7 @@ public class DateUtilTest {
 
     @Test
     public void testDiffDays() {
-        Map<String[], Integer> mapIO = new HashMap<String[], Integer>(){{
+        Map<String[], Integer> mapIO = new HashMap<String[], Integer>() {{
             put(new String[]{null, ""}, 0);
             put(new String[]{"", ""}, 0);
             put(new String[]{"", "yyyy/MM/dd HH:mm"}, 0);
@@ -86,7 +127,7 @@ public class DateUtilTest {
 
     @Test
     public void testParse() {
-        Map<String[], String[]> mapIO = new HashMap<String[], String[]>(){{
+        Map<String[], String[]> mapIO = new HashMap<String[], String[]>() {{
             put(new String[]{null, ""}, new String[]{"", ""});
             put(new String[]{"", ""}, new String[]{"", ""});
             put(new String[]{"", "yyyy/MM/dd HH:mm"}, new String[]{"", ""});

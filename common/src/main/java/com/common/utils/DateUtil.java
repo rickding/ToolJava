@@ -64,6 +64,7 @@ public class DateUtil {
     public static Date parse(String str) {
         return parse(str, "yyyy-MM-dd HH:mm:ss", true);
     }
+
     public static Date parse(String str, String format) {
         return parse(str, format, true);
     }
@@ -116,5 +117,57 @@ public class DateUtil {
         cal.setTime(date);
         cal.add(Calendar.DATE, days);
         return cal.getTime();
+    }
+
+    /**
+     * Format the date weekly (sprint)
+     *
+     * @param date
+     * @return
+     */
+    public static Date getSprintDate(Date date) {
+        return getSprintDate(date, false);
+    }
+
+    public static Date getSprintDate(Date date, boolean adjust) {
+        if (date == null) {
+            return null;
+        }
+
+        Date today = new Date();
+        if (adjust && date.compareTo(today) < 0) {
+            date = today;
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+        day = (Calendar.SUNDAY - day + 7) % 7;
+        if (day == 0) {
+            day = 7;
+        }
+        cal.add(Calendar.DATE, day);
+        return cal.getTime();
+    }
+
+    /**
+     * Is Saturday or Sunday
+     *
+     * @param date
+     * @return
+     */
+    public static boolean isWeekend(Date date) {
+        if (date == null) {
+            return false;
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+        return Calendar.SATURDAY == day || Calendar.SUNDAY == day;
     }
 }
