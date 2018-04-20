@@ -22,9 +22,6 @@ public class PackHelper {
         add("\\w*[Uu]tils*.groovy");
         add("\\w*[Hh]elper.groovy");
         add("\\w*[Cc]onfig.groovy");
-        add("Team.groovy");
-        add("Plan.groovy");
-        add("Issue((Item)|(Links*)).groovy");
     }};
 
     private String srcPath;
@@ -43,7 +40,7 @@ public class PackHelper {
         if (tmpSet != null && tmpSet.size() > 0) {
             ignoredFileNamePatternSet.addAll(tmpSet);
         }
-        tmpSet = PackConfig.getInst().getIgnoredFileNamePatternSet();
+        tmpSet = PackConfig.getInst().getExcludeFileNamePatternSet();
         if (tmpSet != null && tmpSet.size() > 0) {
             excludeFileNamePatternSet.addAll(tmpSet);
         }
