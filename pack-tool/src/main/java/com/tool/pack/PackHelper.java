@@ -7,23 +7,25 @@ import com.common.util.StrUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class PackHelper {
-    private static final String fileExt = ".groovy";
-    private static final String[] ignoredFileNamePatternArr = {
-            "\\w*[Tt][Ee][Ss][Tt].groovy",
-            "[Tt][Ee][Ss][Tt]\\w*.groovy",
-    };
-    private static final String[] excludeFileNamePatternArr = {
-            "\\w*[Uu]tils*.groovy",
-            "\\w*[Hh]elper.groovy",
-            "\\w*[Cc]onfig.groovy",
-            "Team.groovy",
-            "Plan.groovy",
-            "Issue((Item)|(Links*)).groovy",
-    };
+    private String fileExt = ".groovy";
+    private Set<String> ignoredFileNamePatternSet = new HashSet<String>() {{
+        add("\\w*[Tt][Ee][Ss][Tt].groovy");
+        add("[Tt][Ee][Ss][Tt]\\w*.groovy");
+    }};
+    private Set<String> excludeFileNamePatternSet = new HashSet<String>() {{
+        add("\\w*[Uu]tils*.groovy");
+        add("\\w*[Hh]elper.groovy");
+        add("\\w*[Cc]onfig.groovy");
+        add("Team.groovy");
+        add("Plan.groovy");
+        add("Issue((Item)|(Links*)).groovy");
+    }};
 
     private String srcPath;
     private String dstPath;
@@ -31,6 +33,20 @@ public class PackHelper {
     public PackHelper(String srcPath, String dstPath) {
         this.srcPath = srcPath;
         this.dstPath = dstPath;
+
+        String tmp = PackConfig.getInst().getFileExt();
+        if (!StrUtil.isEmpty(tmp)) {
+            fileExt = tmp;
+        }
+
+        Set<String> tmpSet = PackConfig.getInst().getIgnoredFileNamePatternSet();
+        if (tmpSet != null && tmpSet.size() > 0) {
+            ignoredFileNamePatternSet.addAll(tmpSet);
+        }
+        tmpSet = PackConfig.getInst().getIgnoredFileNamePatternSet();
+        if (tmpSet != null && tmpSet.size() > 0) {
+            excludeFileNamePatternSet.addAll(tmpSet);
+        }
     }
 
     public String[] process() {
@@ -44,7 +60,7 @@ public class PackHelper {
         if (!EmptyUtil.isEmpty(fileArr)) {
             for (File file : fileArr) {
                 boolean ignored = false;
-                for (String pattern : ignoredFileNamePatternArr) {
+                for (String pattern : ignoredFileNamePatternSet) {
                     if (StrUtil.matches(file.getName(), pattern)) {
                         ignored = true;
                         break;
@@ -96,7 +112,7 @@ public class PackHelper {
         // Write to file
         for (PackFile file : fileList) {
             boolean excluded = false;
-            for (String pattern : excludeFileNamePatternArr) {
+            for (String pattern : excludeFileNamePatternSet) {
                 if (StrUtil.matches(file.getFileName(), pattern)) {
                     excluded = true;
                     break;

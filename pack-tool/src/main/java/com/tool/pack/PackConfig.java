@@ -3,8 +3,11 @@ package com.tool.pack;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.Config;
+import com.common.file.FileUtil;
+import com.common.util.EmptyUtil;
 import com.common.util.StrUtil;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,8 +15,42 @@ public class PackConfig extends Config {
     private String fileExt;
     private Set<String> ignoredFileNamePatternSet;
     private Set<String> excludeFileNamePatternSet;
+    private static final String configFileName = "config.json";
 
-    public PackConfig() {
+    public static PackConfig getInst() {
+        synchronized ("PackConfig.getInst()") {
+            if (inst == null) {
+                inst = new PackConfig();
+            }
+        }
+        return (PackConfig) inst;
+    }
+
+    public static void init(String filePath) {
+        synchronized ("PackConfig.getInst()") {
+            inst = null;
+        }
+
+        // Read from the source folder
+        for (String srcPath : new String[]{filePath, ".\\"}) {
+            File[] fileArr = FileUtil.findFiles(srcPath, configFileName);
+            if (!EmptyUtil.isEmpty(fileArr)) {
+                for (File file : fileArr) {
+                    if (file.getName().trim().equalsIgnoreCase(configFileName)) {
+                        getInst().read(file.getPath(), false);
+                        System.out.printf("Read the config file: %s\n", file.getPath());
+                        return;
+                    }
+                }
+            }
+        }
+
+        // Read the packed source
+        getInst().read(configFileName, true);
+        System.out.printf("Read the source file: %s\n", configFileName);
+    }
+
+    private PackConfig() {
         ignoredFileNamePatternSet = new HashSet<String>();
         excludeFileNamePatternSet = new HashSet<String>();
     }
@@ -51,5 +88,17 @@ public class PackConfig extends Config {
         update("ignoredFileNamePatterns", ignoredFileNamePatternSet);
         update("excludeFileNamePatterns", excludeFileNamePatternSet);
         return ret;
+    }
+
+    public String getFileExt() {
+        return fileExt;
+    }
+
+    public Set<String> getIgnoredFileNamePatternSet() {
+        return ignoredFileNamePatternSet;
+    }
+
+    public Set<String> getExcludeFileNamePatternSet() {
+        return excludeFileNamePatternSet;
     }
 }

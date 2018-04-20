@@ -10,11 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Config {
-    private static Config inst = null;
-
-    public static void setInst(Config newInst) {
-        inst = newInst;
-    }
+    protected static Config inst = null;
 
     public static Config getInst() {
         synchronized ("Config.getInst()") {

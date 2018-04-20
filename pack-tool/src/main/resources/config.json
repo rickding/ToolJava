@@ -11,7 +11,6 @@
     "Team.groovy",
     "Plan.groovy",
     "IssueItem.groovy",
-    "IssueLinks*.groovy",
-    "Version.groovy"
+    "IssueLinks*.groovy"
   ]
 }
