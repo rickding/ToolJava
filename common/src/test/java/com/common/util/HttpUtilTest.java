@@ -1,5 +1,6 @@
-package com.common;
+package com.common.util;
 
+import com.common.util.HttpUtil;
 import com.common.util.StrUtil;
 import org.junit.Test;
 

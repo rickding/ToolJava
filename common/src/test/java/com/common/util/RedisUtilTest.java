@@ -1,5 +1,6 @@
-package com.common;
+package com.common.util;
 
+import com.common.util.RedisUtil;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
