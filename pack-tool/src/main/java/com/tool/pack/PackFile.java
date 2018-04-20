@@ -7,6 +7,7 @@ import com.common.util.StrUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -235,25 +236,20 @@ public class PackFile {
         }
 
         // Convert to array
-        if (importedClassPathList.size() <= 0) {
-            importedClassPathArr = null;
-        } else {
-            importedClassPathArr = new String[importedClassPathList.size()];
-            importedClassPathList.toArray(importedClassPathArr);
-        }
-        if (neededFileNameList.size() <= 0) {
-            neededFileNameArr = null;
-        } else {
-            neededFileNameArr = new String[neededFileNameList.size()];
-            neededFileNameList.toArray(neededFileNameArr);
-        }
-        if (classNameList.size() <= 0) {
-            classNameArr = null;
-        } else {
-            classNameArr = new String[classNameList.size()];
-            classNameList.toArray(classNameArr);
-        }
+        importedClassPathArr = toArray(importedClassPathList);
+        neededFileNameArr = toArray(neededFileNameList);
+        classNameArr = toArray(classNameList);
         return true;
+    }
+
+    private String[] toArray(List<String> list) {
+        if (list == null || list.size() <= 0) {
+            return null;
+        }
+        String[] arr = new String[list.size()];
+        list.toArray(arr);
+        Arrays.sort(arr);
+        return arr;
     }
 
     public String getFileName() {
