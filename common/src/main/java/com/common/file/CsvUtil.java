@@ -2,7 +2,7 @@ package com.common.file;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
-import com.common.utils.StrUtil;
+import com.common.util.StrUtil;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

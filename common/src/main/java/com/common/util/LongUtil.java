@@ -1,4 +1,4 @@
-package com.common.utils;
+package com.common.util;
 
 public class LongUtil {
     public static long valueOf(String v) {

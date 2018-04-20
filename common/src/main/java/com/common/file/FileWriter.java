@@ -1,7 +1,7 @@
 package com.common.file;
 
-import com.common.utils.EmptyUtil;
-import com.common.utils.StrUtil;
+import com.common.util.EmptyUtil;
+import com.common.util.StrUtil;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;

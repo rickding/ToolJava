@@ -1,6 +1,6 @@
 package com.common;
 
-import com.common.utils.StrUtil;
+import com.common.util.StrUtil;
 import org.junit.Test;
 
 import java.util.HashMap;

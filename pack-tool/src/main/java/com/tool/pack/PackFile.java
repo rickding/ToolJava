@@ -2,8 +2,8 @@ package com.tool.pack;
 
 import com.common.file.FileUtil;
 import com.common.file.FileWriter;
-import com.common.utils.EmptyUtil;
-import com.common.utils.StrUtil;
+import com.common.util.EmptyUtil;
+import com.common.util.StrUtil;
 
 import java.io.File;
 import java.util.ArrayList;

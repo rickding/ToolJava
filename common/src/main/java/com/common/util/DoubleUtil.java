@@ -1,4 +1,4 @@
-package com.common.utils;
+package com.common.util;
 
 public class DoubleUtil {
     public static double format(double value, int digits) {

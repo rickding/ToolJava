@@ -1,4 +1,4 @@
-package com.common.utils;
+package com.common.util;
 
 import org.junit.Assert;
 import org.junit.Test;

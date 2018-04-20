@@ -1,8 +1,8 @@
 package com.tool.pack;
 
-import com.common.utils.DateUtil;
-import com.common.utils.EmptyUtil;
-import com.common.utils.StrUtil;
+import com.common.util.DateUtil;
+import com.common.util.EmptyUtil;
+import com.common.util.StrUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
