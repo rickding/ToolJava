@@ -66,6 +66,10 @@ public class FileUtil {
      * @param filePath
      * @return
      */
+    public static String readAsStr(String filePath) {
+        return StrUtil.join(read(filePath), "\r\n");
+    }
+
     public static String[] read(String filePath) {
         if (StrUtil.isEmpty(filePath)) {
             return null;

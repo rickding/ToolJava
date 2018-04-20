@@ -1,0 +1,17 @@
+{
+  "fileExt": ".groovy",
+  "ignoredFileNamePatterns": [
+    "\\w*[Tt][Ee][Ss][Tt].groovy",
+    "[Tt][Ee][Ss][Tt]\\w*.groovy"
+  ],
+  "excludeFileNamePatterns": [
+    "\\w*[Uu]tils*.groovy",
+    "\\w*[Hh]elper.groovy",
+    "\\w*[Cc]onfig.groovy",
+    "Team.groovy",
+    "Plan.groovy",
+    "IssueItem.groovy",
+    "IssueLinks*.groovy",
+    "Version.groovy"
+  ]
+}
