@@ -13,29 +13,24 @@ import java.util.Map;
 import java.util.Set;
 
 public class PackHelper {
-    private String fileExt = ".groovy";
-    private Set<String> ignoredFileNamePatternSet = new HashSet<String>() {{
-        add("\\w*[Tt][Ee][Ss][Tt].groovy");
-        add("[Tt][Ee][Ss][Tt]\\w*.groovy");
-    }};
-    private Set<String> excludeFileNamePatternSet = new HashSet<String>() {{
-        add("\\w*[Uu]tils*.groovy");
-        add("\\w*[Hh]elper.groovy");
-        add("\\w*[Cc]onfig.groovy");
-    }};
-
     private String srcPath;
     private String dstPath;
+    private String version;
+    private String fileExt;
+    private Set<String> ignoredFileNamePatternSet;
+    private Set<String> excludeFileNamePatternSet;
 
-    public PackHelper(String srcPath, String dstPath) {
-        this.srcPath = srcPath;
-        this.dstPath = dstPath;
-
-        String tmp = PackConfig.getInst().getFileExt();
-        if (!StrUtil.isEmpty(tmp)) {
-            fileExt = tmp;
+    public PackHelper(PackConfig config) {
+        if (config == null) {
+            return;
         }
+        this.srcPath = config.getSrcPath();
+        this.dstPath = config.getDstPath();
+        this.version = config.getVersion();
+        this.fileExt = config.getFileExt();
 
+        ignoredFileNamePatternSet = new HashSet<String>();
+        excludeFileNamePatternSet = new HashSet<String>();
         Set<String> tmpSet = PackConfig.getInst().getIgnoredFileNamePatternSet();
         if (tmpSet != null && tmpSet.size() > 0) {
             ignoredFileNamePatternSet.addAll(tmpSet);
@@ -117,7 +112,7 @@ public class PackHelper {
             }
             if (!excluded) {
                 String dstFile = FileUtil.getOutputFile(file.getFilePath(), srcPath, dstPath);
-                boolean ret = file.write(dstFile);
+                boolean ret = file.write(dstFile, version);
                 fileNameList.add(String.format("%s to write: %s, dst: %s", ret ? "Success" : "Fail", file.toString(), dstFile));
             }
         }

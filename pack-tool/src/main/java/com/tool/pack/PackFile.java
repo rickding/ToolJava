@@ -43,7 +43,7 @@ public class PackFile {
      * @param filePath
      * @return
      */
-    public boolean write(String filePath) {
+    public boolean write(String filePath, String version) {
         if (StrUtil.isEmpty(filePath)) {
             return false;
         }
@@ -53,6 +53,9 @@ public class PackFile {
         if (!writer.open()) {
             System.out.printf("Fail to create output file: %s\n", filePath);
             return false;
+        }
+        if (!StrUtil.isEmpty(version)) {
+            writer.writeLine(String.format("// Version: %s", version));
         }
 
         // Write

@@ -12,9 +12,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PackConfig extends Config {
+    private String srcPath;
+    private String dstPath;
+    private String version;
     private String fileExt;
     private Set<String> ignoredFileNamePatternSet;
     private Set<String> excludeFileNamePatternSet;
+
     private static final String configFileName = "config.json";
 
     public static PackConfig getInst() {
@@ -26,7 +30,15 @@ public class PackConfig extends Config {
         return (PackConfig) inst;
     }
 
-    public static void init(String filePath) {
+    /**
+     * Read the config file
+     * @return
+     */
+    public static boolean init() {
+        return init(null);
+    }
+
+    public static boolean init(String filePath) {
         synchronized ("PackConfig.getInst()") {
             inst = null;
         }
@@ -37,17 +49,20 @@ public class PackConfig extends Config {
             if (!EmptyUtil.isEmpty(fileArr)) {
                 for (File file : fileArr) {
                     if (file.getName().trim().equalsIgnoreCase(configFileName)) {
-                        getInst().read(file.getPath(), false);
-                        System.out.printf("Read the config file: %s\n", file.getPath());
-                        return;
+                        boolean ret = getInst().read(file.getPath(), false);
+                        System.out.printf("%s to read config from file: %s\n", ret ? "Success" : "Fail", file.getPath());
+                        if (ret) {
+                            return true;
+                        }
                     }
                 }
             }
         }
 
         // Read the packed source
-        getInst().read(configFileName, true);
-        System.out.printf("Read the source file: %s\n", configFileName);
+        boolean ret = getInst().read(configFileName, true);
+        System.out.printf("%s to read config from source: %s\n", ret ? "Success" : "Fail", configFileName);
+        return ret;
     }
 
     private PackConfig() {
@@ -55,7 +70,12 @@ public class PackConfig extends Config {
         excludeFileNamePatternSet = new HashSet<String>();
     }
 
-    private void update(String key, Set<String> values) {
+    /**
+     * Read the config by key
+     * @param key
+     * @param values
+     */
+    private void read(String key, Set<String> values) {
         if (StrUtil.isEmpty(key) || values == null) {
             return;
         }
@@ -71,6 +91,18 @@ public class PackConfig extends Config {
         }
     }
 
+    private String read(String key) {
+        if (StrUtil.isEmpty(key)) {
+            return null;
+        }
+
+        JSONObject obj = lastFileObj;
+        if (obj.containsKey(key)) {
+            return obj.getString(key);
+        }
+        return null;
+    }
+
     @Override
     public boolean read(String fileName, boolean isResource) {
         boolean ret = super.read(fileName, isResource);
@@ -79,15 +111,25 @@ public class PackConfig extends Config {
         }
 
         // Parse the json object
-        JSONObject obj = lastFileObj;
-        String key = "fileExt";
-        if (obj.containsKey(key)) {
-            fileExt = obj.getString(key);
-        }
-
-        update("ignoredFileNamePatterns", ignoredFileNamePatternSet);
-        update("excludeFileNamePatterns", excludeFileNamePatternSet);
+        srcPath = read("srcPath");
+        dstPath = read("dstPath");
+        version = read("version");
+        fileExt = read("fileExt");
+        read("ignoredFileNamePatterns", ignoredFileNamePatternSet);
+        read("excludeFileNamePatterns", excludeFileNamePatternSet);
         return ret;
+    }
+
+    public String getSrcPath() {
+        return srcPath;
+    }
+
+    public String getDstPath() {
+        return dstPath;
+    }
+
+    public String getVersion() {
+        return version;
     }
 
     public String getFileExt() {

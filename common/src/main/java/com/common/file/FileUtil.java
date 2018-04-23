@@ -224,7 +224,7 @@ public class FileUtil {
 
         // File or directory, while not iterate sub folders
         File[] files = null;
-        if (file.isFile() && filePath.toLowerCase().endsWith(fileExt.toLowerCase())) {
+        if (file.isFile() && (StrUtil.isEmpty(fileExt) || filePath.toLowerCase().endsWith(fileExt.toLowerCase()))) {
             files = new File[]{file};
         } else if (file.isDirectory()) {
             files = file.listFiles(new FileFilter() {
