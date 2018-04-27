@@ -8,11 +8,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Hello world!
+ * Pack tool
  */
 public class App {
     public static void main(String[] args) {
-        System.out.println("Specify the script file or folder:");
+        System.out.println("Start");
 
         // Check the files and folders
         Date timeStart = new Date();

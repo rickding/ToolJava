@@ -99,9 +99,12 @@ public class FileUtil {
     /**
      * Add or remove file ext
      * @param fileName
-     * @param fileExt
      * @return
      */
+    public static String replaceFileExt(String fileName, String oldFileExt, String newFileExt) {
+        return appendFileExt(removeFileExt(fileName, oldFileExt), newFileExt);
+    }
+
     public static String appendFileExt(String fileName, String fileExt) {
         if (StrUtil.isEmpty(fileName)) {
             return null;
@@ -142,6 +145,11 @@ public class FileUtil {
         File src = new File(filePath);
         String fileName = src.getName();
         if (!StrUtil.isEmpty(basePath)) {
+            File baseFile = new File(basePath);
+            if (baseFile.isFile()) {
+                basePath = baseFile.getParent();
+            }
+
             // Remove the base path
             basePath = basePath.trim().toLowerCase();
             int index = filePath.toLowerCase().indexOf(basePath);
@@ -181,7 +189,7 @@ public class FileUtil {
         String fileName = getFileName(srcFile, srcPath);
         String dstFile = String.format("%s%s%s%s", dstPath, dstPath.endsWith("\\") || fileName.startsWith("\\") ? "" : "\\", fileName, postfix);
         if (srcFile.trim().equalsIgnoreCase(dstFile.trim())) {
-            dstFile = String.format("%s_pack", dstFile);
+            dstFile = String.format("%s_%s", dstFile, StrUtil.isEmpty(postfix) ? "_pack" : postfix);
         }
         return dstFile;
     }

@@ -7,8 +7,17 @@ import java.util.regex.Pattern;
  * Created by user on 2017/9/23.
  */
 public class StrUtil {
+    /**
+     * String is null or empty
+     * @param str
+     * @return
+     */
     public static boolean isEmpty(String str) {
-        return str == null || str.trim().length() <= 0;
+        return isEmpty(str, true);
+    }
+
+    public static boolean isEmpty(String str, boolean trim) {
+        return str == null || str.length() <= 0 || (trim && str.trim().length() <= 0);
     }
 
     /**

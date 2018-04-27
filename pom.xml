@@ -12,5 +12,6 @@
     <modules>
         <module>common</module>
         <module>pack-tool</module>
+        <module>sql-parser</module>
     </modules>
 </project>
