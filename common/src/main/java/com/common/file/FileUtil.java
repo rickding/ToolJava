@@ -189,7 +189,7 @@ public class FileUtil {
         String fileName = getFileName(srcFile, srcPath);
         String dstFile = String.format("%s%s%s%s", dstPath, dstPath.endsWith("\\") || fileName.startsWith("\\") ? "" : "\\", fileName, postfix);
         if (srcFile.trim().equalsIgnoreCase(dstFile.trim())) {
-            dstFile = String.format("%s_%s", dstFile, StrUtil.isEmpty(postfix) ? "_pack" : postfix);
+            dstFile = String.format("%s%s", dstFile, StrUtil.isEmpty(postfix) ? "_pack" : postfix);
         }
         return dstFile;
     }
