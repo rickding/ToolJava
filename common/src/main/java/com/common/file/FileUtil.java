@@ -216,6 +216,10 @@ public class FileUtil {
         return findFiles(filePath, null, fileExt, null, recursive);
     }
 
+    public static File[] findFiles(String filePath, String fileExt, String ignoreFileNamePostfix) {
+        return findFiles(filePath, fileExt, ignoreFileNamePostfix, false);
+    }
+
     public static File[] findFiles(String filePath, String fileExt, String ignoreFileNamePostfix, boolean recursive) {
         return findFiles(filePath, null, fileExt, ignoreFileNamePostfix, recursive);
     }
