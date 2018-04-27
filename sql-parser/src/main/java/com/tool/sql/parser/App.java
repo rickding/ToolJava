@@ -21,16 +21,18 @@ public class App {
         List<String> projects = new ArrayList<String>();
 
         // Parse files: File or directory, while not iterate sub folders
-        File[] files = FileUtil.findFiles(SqlConfig.srcPath, SqlConfig.fileExt);
+        File[] files = FileUtil.findFiles(ParserConfig.srcPath, ParserConfig.fileExt);
         if (!EmptyUtil.isEmpty(files)) {
             for (File f : files) {
+                projects.add(f.getPath());
+
                 // Parse
-                List<DB> dbList = SqlParser.process(f);
+                List<DB> dbList = ParserHelper.process(f);
                 if (!EmptyUtil.isEmpty(dbList)) {
                     for (DB db : dbList) {
                         // Save to file
-                        String dstFile = FileUtil.getOutputFile(f.getPath(), SqlConfig.srcPath, SqlConfig.dstPath);
-                        dstFile = FileUtil.replaceFileExt(dstFile, SqlConfig.fileExt, SqlConfig.newFileExt);
+                        String dstFile = FileUtil.getOutputFile(f.getPath(), ParserConfig.srcPath, ParserConfig.dstPath, "_parse");
+                        dstFile = FileUtil.replaceFileExt(dstFile, ParserConfig.fileExt, ParserConfig.newFileExt);
                         db.saveToFile(dstFile);
                     }
                 }

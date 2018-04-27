@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by user on 2017/9/23.
  */
-public class SqlParser {
+public class ParserHelper {
     /**
      * Parse the file line by line
      * @param file
@@ -56,11 +56,11 @@ public class SqlParser {
                     table = (Table)item;
                     System.out.println(table.toString());
 
-                    if (!isIgnored(item, SqlConfig.TableIgnoreArr)) {
+                    if (!isIgnored(item, ParserConfig.TableIgnoreArr)) {
                         db.addTable(table);
                     }
                 } else if (item.isField()) {
-                    if(!isIgnored(item, SqlConfig.FieldIgnoreArr)) {
+                    if(!isIgnored(item, ParserConfig.FieldIgnoreArr)) {
                         table.addField((Field) item);
                     }
                 } else {
@@ -103,35 +103,35 @@ public class SqlParser {
         String sqlLowercase = sql.toLowerCase();
 
         // Check DB, table, field and comment. Note: DB and comment are not at the beginning, while table and field are the first ones.
-        if (sqlLowercase.indexOf(SqlConfig.DBFlag) >= 0) {
+        if (sqlLowercase.indexOf(ParserConfig.DBFlag) >= 0) {
             // Remove the unused beginning.
-            String name = sql.substring(sqlLowercase.indexOf(SqlConfig.DBFlag));
-            name = parseName(name, SqlConfig.DBSplitter, SqlConfig.DBIndex, SqlConfig.DBTrimArr);
+            String name = sql.substring(sqlLowercase.indexOf(ParserConfig.DBFlag));
+            name = parseName(name, ParserConfig.DBSplitter, ParserConfig.DBIndex, ParserConfig.DBTrimArr);
             if (!StrUtil.isEmpty(name)) {
                 return new DB(name);
             }
         }
 
-        if (sqlLowercase.startsWith(SqlConfig.TableFlag)) {
-            String name = sql.substring(sqlLowercase.indexOf(SqlConfig.TableFlag));
-            name = parseName(name, SqlConfig.TableSplitter, SqlConfig.TableIndex, SqlConfig.TableTrimArr);
+        if (sqlLowercase.startsWith(ParserConfig.TableFlag)) {
+            String name = sql.substring(sqlLowercase.indexOf(ParserConfig.TableFlag));
+            name = parseName(name, ParserConfig.TableSplitter, ParserConfig.TableIndex, ParserConfig.TableTrimArr);
             if (!StrUtil.isEmpty(name)) {
                 return new Table(name);
             }
         }
 
-        if (sqlLowercase.startsWith(SqlConfig.FieldFlag)) {
-            String name = sql.substring(sqlLowercase.indexOf(SqlConfig.FieldFlag));
-            name = parseName(name,SqlConfig.FieldSplitter, SqlConfig.FieldIndex, SqlConfig.FieldTrimArr);
+        if (sqlLowercase.startsWith(ParserConfig.FieldFlag)) {
+            String name = sql.substring(sqlLowercase.indexOf(ParserConfig.FieldFlag));
+            name = parseName(name, ParserConfig.FieldSplitter, ParserConfig.FieldIndex, ParserConfig.FieldTrimArr);
             if (!StrUtil.isEmpty(name)) {
                 Field item = new Field(name);
 
                 // Find the comment of the field
-                sql = sql.substring(sqlLowercase.indexOf(SqlConfig.FieldFlag));
+                sql = sql.substring(sqlLowercase.indexOf(ParserConfig.FieldFlag));
                 sqlLowercase = sql.toLowerCase();
-                if (sqlLowercase.indexOf(SqlConfig.CommentFlag) >= 0) {
-                    name = sql.substring(sqlLowercase.indexOf(SqlConfig.CommentFlag));
-                    name = parseName(name, SqlConfig.FieldCommentSplitter, SqlConfig.CommentIndex, SqlConfig.CommentTrimArr);
+                if (sqlLowercase.indexOf(ParserConfig.CommentFlag) >= 0) {
+                    name = sql.substring(sqlLowercase.indexOf(ParserConfig.CommentFlag));
+                    name = parseName(name, ParserConfig.FieldCommentSplitter, ParserConfig.CommentIndex, ParserConfig.CommentTrimArr);
                     if (!StrUtil.isEmpty(name)) {
                         item.setComment(name);
                     }
@@ -140,10 +140,10 @@ public class SqlParser {
             }
         }
 
-        if (sqlLowercase.indexOf(SqlConfig.CommentFlag) >= 0) {
+        if (sqlLowercase.indexOf(ParserConfig.CommentFlag) >= 0) {
             // Find the comment of the table, which is at the end of the definition block.
-            String name = sql.substring(sqlLowercase.indexOf(SqlConfig.CommentFlag));
-            name = parseName(name, SqlConfig.TableCommentSplitter, SqlConfig.CommentIndex, SqlConfig.CommentTrimArr);
+            String name = sql.substring(sqlLowercase.indexOf(ParserConfig.CommentFlag));
+            name = parseName(name, ParserConfig.TableCommentSplitter, ParserConfig.CommentIndex, ParserConfig.CommentTrimArr);
             if (!StrUtil.isEmpty(name)) {
                 return new Comment(name);
             }

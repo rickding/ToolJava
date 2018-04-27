@@ -1,6 +1,6 @@
 package com.tool.sql.parser;
 
-public class SqlConfig {
+public class ParserConfig {
     public static String srcPath = "C:\\Work\\jira\\db\\jiradb.sql";
     public static String dstPath = "C:\\Work\\jira\\db";
     public static String fileExt = ".sql";

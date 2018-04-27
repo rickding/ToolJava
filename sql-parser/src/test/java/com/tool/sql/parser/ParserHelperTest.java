@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SqlParserTest {
+public class ParserHelperTest {
     @Test
     public void testParse() {
         Map<String, String> mapIO = new HashMap<String, String>() {{
@@ -57,7 +57,7 @@ public class SqlParserTest {
         }};
 
         for (Map.Entry<String, String> io : mapIO.entrySet()) {
-            DBItem item = SqlParser.parse(io.getKey());
+            DBItem item = ParserHelper.parse(io.getKey());
             String ret = item == null ? null : item.toString();
             Assert.assertEquals(io.getValue(), ret);
         }
@@ -71,25 +71,25 @@ public class SqlParserTest {
             put(new Object[] {"create table ea", " ", 2, null}, "ea");
             put(new Object[] {"create table `ea`", " ", 2, new String[] {"`"}}, "ea");
 
-            put(new Object[] {"Database: ad", SqlConfig.DBSplitter, SqlConfig.DBIndex, SqlConfig.DBTrimArr}, "ad");
-            put(new Object[] {"Database       : oms-v2-st", SqlConfig.DBSplitter, SqlConfig.DBIndex, SqlConfig.DBTrimArr}, "oms-v2-st");
+            put(new Object[] {"Database: ad", ParserConfig.DBSplitter, ParserConfig.DBIndex, ParserConfig.DBTrimArr}, "ad");
+            put(new Object[] {"Database       : oms-v2-st", ParserConfig.DBSplitter, ParserConfig.DBIndex, ParserConfig.DBTrimArr}, "oms-v2-st");
 
-            put(new Object[] {"CREATE TABLE `agif_agent` (", SqlConfig.TableSplitter, SqlConfig.TableIndex, SqlConfig.TableTrimArr}, "agif_agent");
-            put(new Object[] {"CREATE TABLE `ad_code` (", SqlConfig.TableSplitter, SqlConfig.TableIndex, SqlConfig.TableTrimArr}, "ad_code");
+            put(new Object[] {"CREATE TABLE `agif_agent` (", ParserConfig.TableSplitter, ParserConfig.TableIndex, ParserConfig.TableTrimArr}, "agif_agent");
+            put(new Object[] {"CREATE TABLE `ad_code` (", ParserConfig.TableSplitter, ParserConfig.TableIndex, ParserConfig.TableTrimArr}, "ad_code");
 
-            put(new Object[] {"`id` bigint(20) NOT NULL AUTO_INCREMENT,", SqlConfig.FieldSplitter, SqlConfig.FieldIndex, SqlConfig.FieldTrimArr}, "id");
-            put(new Object[] {"`AGENT_ID` varchar(36) COLLATE utf8_unicode_ci NOT NULL COMMENT '买手ID',", SqlConfig.FieldSplitter, SqlConfig.FieldIndex, SqlConfig.FieldTrimArr}, "AGENT_ID");
+            put(new Object[] {"`id` bigint(20) NOT NULL AUTO_INCREMENT,", ParserConfig.FieldSplitter, ParserConfig.FieldIndex, ParserConfig.FieldTrimArr}, "id");
+            put(new Object[] {"`AGENT_ID` varchar(36) COLLATE utf8_unicode_ci NOT NULL COMMENT '买手ID',", ParserConfig.FieldSplitter, ParserConfig.FieldIndex, ParserConfig.FieldTrimArr}, "AGENT_ID");
 
-            put(new Object[]{"COMMENT '广告 页面',", SqlConfig.FieldCommentSplitter, SqlConfig.CommentIndex, SqlConfig.CommentTrimArr}, "广告 页面");
-            put(new Object[]{"COMMENT '买手ID',", SqlConfig.FieldCommentSplitter, SqlConfig.CommentIndex, SqlConfig.CommentTrimArr}, "买手ID");
-            put(new Object[]{"`create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间 - 应用操作时间',", SqlConfig.FieldCommentSplitter, SqlConfig.CommentIndex, SqlConfig.CommentTrimArr}, "创建时间 - 应用操作时间");
-            put(new Object[]{" COMMENT='客户= 表';", SqlConfig.TableCommentSplitter, SqlConfig.CommentIndex, SqlConfig.CommentTrimArr}, "客户= 表");
-            put(new Object[]{") ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='页面关联品牌';", SqlConfig.TableCommentSplitter, SqlConfig.CommentIndex, SqlConfig.CommentTrimArr}, "页面关联品牌");
+            put(new Object[]{"COMMENT '广告 页面',", ParserConfig.FieldCommentSplitter, ParserConfig.CommentIndex, ParserConfig.CommentTrimArr}, "广告 页面");
+            put(new Object[]{"COMMENT '买手ID',", ParserConfig.FieldCommentSplitter, ParserConfig.CommentIndex, ParserConfig.CommentTrimArr}, "买手ID");
+            put(new Object[]{"`create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间 - 应用操作时间',", ParserConfig.FieldCommentSplitter, ParserConfig.CommentIndex, ParserConfig.CommentTrimArr}, "创建时间 - 应用操作时间");
+            put(new Object[]{" COMMENT='客户= 表';", ParserConfig.TableCommentSplitter, ParserConfig.CommentIndex, ParserConfig.CommentTrimArr}, "客户= 表");
+            put(new Object[]{") ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='页面关联品牌';", ParserConfig.TableCommentSplitter, ParserConfig.CommentIndex, ParserConfig.CommentTrimArr}, "页面关联品牌");
         }};
 
         for (Map.Entry<Object[], String> io : mapIO.entrySet()) {
             Object[] params = io.getKey();
-            String ret = SqlParser.parseName((String) params[0], (String) params[1], (Integer) params[2], (String[]) params[3]);
+            String ret = ParserHelper.parseName((String) params[0], (String) params[1], (Integer) params[2], (String[]) params[3]);
             Assert.assertEquals(io.getValue(), ret);
         }
     }
