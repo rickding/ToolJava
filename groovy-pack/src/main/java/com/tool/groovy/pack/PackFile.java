@@ -1,4 +1,4 @@
-package com.tool.pack;
+package com.tool.groovy.pack;
 
 import com.common.file.FileUtil;
 import com.common.file.FileWriter;
