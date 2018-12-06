@@ -5,7 +5,7 @@ public class ParserConfig {
     public static String dstPath = "D:\\work\\ams\\docker\\doc\\db.csv";
     public static String fileExt = ".html";
 
-    // Table, Field, Comment
+    // Table, Type, Field, Comment
     public static String TableFlag = "public class <span class=\"typeNameLabel\">".toLowerCase();
     public static String TableSplitter = "</span>";
     public static int TableIndex = 0;

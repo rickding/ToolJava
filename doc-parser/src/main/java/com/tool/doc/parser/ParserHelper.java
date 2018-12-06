@@ -79,7 +79,7 @@ public class ParserHelper {
                 } else if (item.isComment()) {
                     if (lastItem != null && (lastItem.isTable() || lastItem.isField())) {
                         // comment of table or field
-                        item.setComment(item.getComment());
+                        lastItem.setComment(item.getComment());
                     } else {
                         System.out.printf("Un matched comment: %s, %s\n", item.toString(), file.getName());
                     }
