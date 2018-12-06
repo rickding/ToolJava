@@ -11,6 +11,7 @@
 
     <modules>
         <module>common</module>
+        <module>doc-parser</module>
         <module>groovy-pack</module>
         <module>sql-parser</module>
         <module>sql-updater</module>
