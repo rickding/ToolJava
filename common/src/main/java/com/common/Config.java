@@ -13,9 +13,11 @@ public class Config {
     protected static Config inst = null;
 
     public static Config getInst() {
-        synchronized ("Config.getInst()") {
-            if (inst == null) {
-                inst = new Config();
+        if (inst == null) {
+            synchronized (Config.class) {
+                if (inst == null) {
+                    inst = new Config();
+                }
             }
         }
         return inst;

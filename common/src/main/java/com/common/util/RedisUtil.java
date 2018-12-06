@@ -15,7 +15,7 @@ public class RedisUtil {
      * @return
      */
     public static boolean open(String host, int port) {
-        synchronized ("redis init") {
+        synchronized (RedisUtil.class) {
             if (redis == null) {
                 redis = new Jedis(host, port);
 //                redis.auth("admin");
@@ -32,7 +32,7 @@ public class RedisUtil {
     }
 
     public static void close() {
-        synchronized ("redis close") {
+        synchronized (RedisUtil.class) {
             if (redis != null) {
                 redis.close();
                 redis = null;

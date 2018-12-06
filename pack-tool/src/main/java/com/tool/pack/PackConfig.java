@@ -22,9 +22,11 @@ public class PackConfig extends Config {
     private static final String configFileName = "config.json";
 
     public static PackConfig getInst() {
-        synchronized ("PackConfig.getInst()") {
-            if (inst == null) {
-                inst = new PackConfig();
+        if (inst == null) {
+            synchronized (PackConfig.class) {
+                if (inst == null) {
+                    inst = new PackConfig();
+                }
             }
         }
         return (PackConfig) inst;
@@ -39,7 +41,7 @@ public class PackConfig extends Config {
     }
 
     public static boolean init(String filePath) {
-        synchronized ("PackConfig.getInst()") {
+        synchronized (PackConfig.class) {
             inst = null;
         }
 
