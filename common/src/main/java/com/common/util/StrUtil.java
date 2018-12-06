@@ -84,4 +84,24 @@ public class StrUtil {
         }
         return sb.substring(separator.length());
     }
+
+    public static String eraseHtmlBrace(String str) {
+        if (StrUtil.isEmpty(str)) {
+            return "";
+        }
+
+        String b1 = "<", b2 = ">";
+        while (str.indexOf(b1) >= 0 && str.indexOf(b2) > str.indexOf(b1)) {
+            if (str.indexOf(b1) == 0) {
+                str = str.substring(str.indexOf(b2) + b2.length());
+            } else if (str.indexOf(b2) == str.length() - b2.length()) {
+                str = str.substring(0, str.indexOf(b1));
+            } else {
+                str = String.format("%s%s",
+                        str.substring(0, str.indexOf(b1)), str.substring(str.indexOf(b2) + b2.length())
+                );
+            }
+        }
+        return str;
+    }
 }

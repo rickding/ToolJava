@@ -24,6 +24,10 @@ public abstract class DBItem {
         return false;
     }
 
+    public boolean isType() {
+        return false;
+    }
+
     public boolean isComment() {
         return false;
     }

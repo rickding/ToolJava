@@ -32,6 +32,9 @@ public class App {
                 // Parse
                 ParserHelper.process(f, db);
             }
+
+            // Save csv file
+            db.saveToFile(ParserConfig.dstPath);
         }
 
         // Summary the information

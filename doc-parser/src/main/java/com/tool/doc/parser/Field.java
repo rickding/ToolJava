@@ -3,9 +3,8 @@ package com.tool.doc.parser;
 public class Field extends DBItem {
     private String type;
 
-    public Field(String name, String type) {
+    public Field(String name) {
         this.name = name;
-        this.type = type;
     }
 
     @Override

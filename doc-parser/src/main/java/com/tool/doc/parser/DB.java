@@ -2,6 +2,7 @@ package com.tool.doc.parser;
 
 import com.common.file.FileUtil;
 import com.common.file.FileWriter;
+import com.common.util.StrUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class DB extends DBItem {
 
     /**
      * Add table into list
+     *
      * @param table
      */
     public void addTable(Table table) {
@@ -27,42 +29,54 @@ public class DB extends DBItem {
             return;
         }
 
-        synchronized ("addTable") {
-            if (tableList == null) {
-                tableList = new ArrayList<Table>();
+        if (tableList == null) {
+            synchronized (DB.class) {
+                if (tableList == null) {
+                    tableList = new ArrayList<Table>();
+                }
             }
         }
         tableList.add(table);
     }
 
     /**
-     * Save to file
+     * Save to csv file
+     *
      * @param filePath
      */
     public boolean saveToFile(String filePath) {
+        if (StrUtil.isEmpty(filePath)) {
+            return false;
+        }
+
+        filePath = FileUtil.appendFileExt(filePath, ".csv");
         FileUtil.mkdirs(filePath);
+
         FileWriter writer = new FileWriter(filePath);
         if (!writer.open()) {
             System.out.printf("Fail to create output file: %s\n", filePath);
             return false;
         }
 
-        // Write
-        writer.writeLine(String.format("database: %s\n", name));
-
-        // Tables
+        // Table, field, type, comment
         if (tableList != null && tableList.size() > 0) {
-            StringBuilder sb = new StringBuilder();
+            // Write header
+            writer.writeLine("table,field,type,comment");
+
             for (Table table : tableList) {
-                sb.append(", ");
-                sb.append(table.getName());
+                List<Field> fieldList = table.getFieldList();
+                if (fieldList != null && fieldList.size() > 0) {
+                    for (Field field : fieldList) {
+                        writer.writeLine(String.format("%s,%s,%s,\"%s\"",
+                                table.getName(), field.getName(), field.getType(),
+                                StrUtil.isEmpty(field.getComment()) ? "" : field.getComment()
+                        ));
+                    }
+                }
             }
-            writer.writeLine(String.format("tables: %s", sb.substring(1)));
         } else {
             writer.writeLine("Has no tables.");
         }
-
-        // TODO: fields
 
         // Close
         writer.close();

@@ -12,14 +12,16 @@ public class ParserConfig {
     public static String[] TableTrimArr = {" ", "Po"};
     public static String[] TableIgnoreArr = {"_copy"};
 
-//    public static String FieldFlag = "<td class=\"colFirst\">".toLowerCase();
-//    public static String FieldSplitter = "</td>";
+    public static String TypeFlag = "<td class=\"colFirst\"><code>".toLowerCase();
+    public static String TypeSplitter = "</code></td>";
+    public static int TypeIndex = 0;
+    public static String[] TypeTrimArr = {"private", "protected", " ", "java.lang.", "java.util."};
 
     public static String FieldFlag = "<td class=\"colLast\"><code><span class=\"memberNameLink\">".toLowerCase();
     public static String FieldSplitter = "</span></code>";
     public static int FieldIndex = 0;
     public static String[] FieldTrimArr = {"<code>", "</code>"};
-    public static String[] FieldIgnoreArr = {"createdBy", "createdDate"};
+    public static String[] FieldIgnoreArr = {};
 
     public static String CommentFlag = "<div class=\"block\">".toLowerCase();
     public static String CommentSplitter = "</div>";

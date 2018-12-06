@@ -31,4 +31,8 @@ public class Table extends DBItem {
         }
         fieldList.add(field);
     }
+
+    public List<Field> getFieldList() {
+        return fieldList;
+    }
 }
