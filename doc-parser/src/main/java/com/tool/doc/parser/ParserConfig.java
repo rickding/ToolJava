@@ -3,7 +3,7 @@ package com.tool.doc.parser;
 public class ParserConfig {
     public static String srcPath = "D:\\work\\ams\\docker\\JavaDoc";
     public static String dstPath = "D:\\work\\ams\\docker\\doc\\db.csv";
-    public static String fileExt = "po.html";
+    public static String fileExt = ".html";
 
     // Table, Field, Comment
     public static String TableFlag = "public class <span class=\"typeNameLabel\">".toLowerCase();
@@ -15,7 +15,7 @@ public class ParserConfig {
     public static String TypeFlag = "<td class=\"colFirst\"><code>".toLowerCase();
     public static String TypeSplitter = "</code></td>";
     public static int TypeIndex = 0;
-    public static String[] TypeTrimArr = {"private", "protected", " ", "java.lang.", "java.util."};
+    public static String[] TypeTrimArr = {"private", "protected", "static", " ", "java.lang.", "java.util.", "java.math.", "java.sql."};
 
     public static String FieldFlag = "<td class=\"colLast\"><code><span class=\"memberNameLink\">".toLowerCase();
     public static String FieldSplitter = "</span></code>";

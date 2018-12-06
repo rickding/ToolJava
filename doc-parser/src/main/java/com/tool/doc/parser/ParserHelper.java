@@ -69,7 +69,7 @@ public class ParserHelper {
                         if (table != null) {
                             table.addField(field);
                         } else {
-                            System.out.printf("Orphan field: %s\n", item.toString());
+                            System.out.printf("Orphan field: %s, %s\n", item.toString(), file.getName());
                         }
                         lastItem = item;
                     }
@@ -81,7 +81,7 @@ public class ParserHelper {
                         // comment of table or field
                         item.setComment(item.getComment());
                     } else {
-                        System.out.printf("Un matched comment: %s\n", item.toString());
+                        System.out.printf("Un matched comment: %s, %s\n", item.toString(), file.getName());
                     }
                 } else {
                     System.out.printf("Un-supported item: %s\n", item.toString());

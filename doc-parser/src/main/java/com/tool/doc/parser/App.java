@@ -3,7 +3,6 @@ package com.tool.doc.parser;
 import com.common.file.FileUtil;
 import com.common.util.DateUtil;
 import com.common.util.EmptyUtil;
-import sun.font.TrueTypeFont;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,11 +24,19 @@ public class App {
         File[] files = FileUtil.findFiles(ParserConfig.srcPath, ParserConfig.fileExt, true);
         if (!EmptyUtil.isEmpty(files)) {
             DB db = new DB("ams");
-
             for (File f : files) {
-                projects.add(f.getPath());
+                // Filter db files: entity or po
+                String filePath = f.getPath().toLowerCase();
+                if (!filePath.contains("entity") && !filePath.endsWith(String.format("po%s", ParserConfig.fileExt))) {
+                    continue;
+                }
+
+                if (filePath.endsWith("package-summary.html")) {
+                    continue;
+                }
 
                 // Parse
+                projects.add(filePath);
                 ParserHelper.process(f, db);
             }
 
