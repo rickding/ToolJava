@@ -17,9 +17,9 @@ public class ExcelUtil {
      * @param wb
      * @param filename
      */
-    public static void saveToFile(XSSFWorkbook wb, String filename) {
+    public static boolean saveToFile(XSSFWorkbook wb, String filename) {
         if (wb == null || StrUtil.isEmpty(filename)) {
-            return;
+            return false;
         }
 
         try {
@@ -29,6 +29,18 @@ public class ExcelUtil {
         } catch (Exception e) {
             System.out.printf("Error when saveToFile: %s\r\n", e.getMessage());
         }
+        return true;
+    }
+
+    public static boolean saveToFile(List<String[]> recordList, String filename) {
+        if (recordList == null || recordList.isEmpty() || StrUtil.isEmpty(filename)) {
+            return false;
+        }
+
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = ExcelUtil.getOrCreateSheet(wb, "sheet1");
+        ExcelUtil.fillSheet(sheet, recordList);
+        return saveToFile(wb, filename);
     }
 
     public static XSSFSheet getOrCreateSheet(XSSFWorkbook wb, String sheetName) {
