@@ -75,4 +75,24 @@ public class StrUtilTest {
             Assert.assertEquals(io.getKey(), ret);
         }
     }
+
+    @Test
+    public void testReplace() {
+        Map<String, String> mapIO = new HashMap<String, String>(){{
+            put(null, null);
+            put("", "");
+            put("a", "a");
+            put("List&lt;EquityShare&gt;", "List<EquityShare>");
+        }};
+
+        Map<String, String> replaceMap = new HashMap<String, String>() {{
+            put("&lt;", "<");
+            put("&gt;", ">");
+        }};
+
+        for (Map.Entry<String, String> io : mapIO.entrySet()) {
+            String ret = StrUtil.replace(io.getKey(), replaceMap);
+            Assert.assertEquals(io.getValue(), ret);
+        }
+    }
 }

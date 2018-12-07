@@ -1,5 +1,8 @@
 package com.common.util;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -103,5 +106,33 @@ public class StrUtil {
             }
         }
         return str;
+    }
+
+    public static String replace(String str, Map<String, String> replaceMap) {
+        if (StrUtil.isEmpty(str) || replaceMap == null || replaceMap.size() <= 0) {
+            return str;
+        }
+
+        // Replace
+        for (Map.Entry<String, String> replace : replaceMap.entrySet()) {
+            str = str.replace(replace.getKey(), replace.getValue());
+        }
+        return str;
+    }
+
+    public static boolean isInList(String str, String[] strArr) {
+        if (str == null || strArr == null || strArr.length <= 0) {
+            return false;
+        }
+
+        return isInList(str, Arrays.asList(strArr));
+    }
+
+    public static boolean isInList(String str, List<String> strList) {
+        if (str == null || strList == null || strList.size() <= 0) {
+            return false;
+        }
+
+        return strList.contains(str);
     }
 }
