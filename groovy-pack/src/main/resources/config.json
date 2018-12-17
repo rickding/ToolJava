@@ -1,6 +1,6 @@
 {
-  "srcPath": "C:\\Work\\jira\\scriptrunner-samples\\jira\\src\\main\\groovy",
-  "dstPath": "C:\\Work\\jira\\deploy\\jira",
+  "srcPath": "D:\\Work\\jira\\scriptrunner-samples\\jira\\src\\main\\groovy",
+  "dstPath": "D:\\Work\\jira\\deploy\\jira",
   "version": "0.0.1",
   "fileExt": ".groovy",
   "ignoredFileNamePatterns": [
