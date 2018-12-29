@@ -7,7 +7,7 @@ import org.junit.Test;
 public class PackConfigTest {
     @Test
     public void testPackConfig() {
-        boolean ret = PackConfig.getInst().readFile("config.json");
+        boolean ret = PackConfig.getInst().readFile();
         Assert.assertEquals(true, ret);
 
         String v = Config.getInst().readValue("version");

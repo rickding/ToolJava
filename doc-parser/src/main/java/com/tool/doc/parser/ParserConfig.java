@@ -6,7 +6,7 @@ import java.util.Map;
 public class ParserConfig {
 //    public static String srcPath = "D:\\work\\ams\\docker\\JavaDoc";
 //    public static String dstPath = "D:\\work\\ams\\docker\\doc\\db.csv";
-    public static String srcPath = "./JavaDoc";
+    public static String srcPath = "../JavaDoc";
     public static String dstPath = "./db.csv";
     public static String fileExt = ".html";
 

@@ -38,10 +38,11 @@ public class Config {
 
     /**
      * Read file: search file and resource
-     *
-     * @param fileName
-     * @return
      */
+    public boolean readFile() {
+        return readFile("config.json");
+    }
+
     public boolean readFile(String fileName) {
         return readFile(null, fileName);
     }

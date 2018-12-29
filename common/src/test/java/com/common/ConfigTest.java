@@ -6,7 +6,7 @@ import org.junit.Test;
 public class ConfigTest {
     @Test
     public void testConfig() {
-        boolean ret = Config.getInst().readFile("config.json");
+        boolean ret = Config.getInst().readFile();
         Assert.assertEquals(true, ret);
 
         String v = Config.getInst().readValue("version");

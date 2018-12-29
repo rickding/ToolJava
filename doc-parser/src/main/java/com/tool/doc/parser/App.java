@@ -1,5 +1,6 @@
 package com.tool.doc.parser;
 
+import com.common.Config;
 import com.common.file.FileUtil;
 import com.common.util.DateUtil;
 import com.common.util.EmptyUtil;
@@ -20,8 +21,9 @@ public class App {
         Date timeStart = new Date();
         List<String> projects = new ArrayList<String>();
 
-        // Parse files: File or directory, while not iterate sub folders
-        File[] files = FileUtil.findFiles(ParserConfig.srcPath, ParserConfig.fileExt, true);
+        // Parse files
+        String srcPath = Config.getInst().readFile() ? Config.getInst().readValue("srcPath") : ParserConfig.srcPath;
+        File[] files = FileUtil.findFiles(srcPath, ParserConfig.fileExt, true);
         if (!EmptyUtil.isEmpty(files)) {
             DB db = new DB("ams");
             for (File f : files) {
