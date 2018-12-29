@@ -77,7 +77,7 @@ public class PackConfig extends Config {
      * @param key
      * @param values
      */
-    private void read(String key, Set<String> values) {
+    private void readValue(String key, Set<String> values) {
         if (StrUtil.isEmpty(key) || values == null) {
             return;
         }
@@ -93,7 +93,7 @@ public class PackConfig extends Config {
         }
     }
 
-    private String read(String key) {
+    private String readValue(String key) {
         if (StrUtil.isEmpty(key)) {
             return null;
         }
@@ -113,12 +113,12 @@ public class PackConfig extends Config {
         }
 
         // Parse the json object
-        srcPath = read("srcPath");
-        dstPath = read("dstPath");
-        version = read("version");
-        fileExt = read("fileExt");
-        read("ignoredFileNamePatterns", ignoredFileNamePatternSet);
-        read("excludeFileNamePatterns", excludeFileNamePatternSet);
+        srcPath = readValue("srcPath");
+        dstPath = readValue("dstPath");
+        version = readValue("version");
+        fileExt = readValue("fileExt");
+        readValue("ignoredFileNamePatterns", ignoredFileNamePatternSet);
+        readValue("excludeFileNamePatterns", excludeFileNamePatternSet);
         return ret;
     }
 
