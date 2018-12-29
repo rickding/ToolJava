@@ -1,13 +1,13 @@
 package com.common;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.file.FileUtil;
 import com.common.file.ResourceUtil;
 import com.common.util.JsonUtil;
 import com.common.util.StrUtil;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Config {
     protected static Config inst = null;
@@ -50,5 +50,45 @@ public class Config {
         lastFileObj = (JSONObject)JsonUtil.parseJson(str);
         fileObjMap.put(fileName.trim().toLowerCase(), lastFileObj);
         return true;
+    }
+
+    /**
+     * Read the config value
+     * @param key
+     */
+    public String readValue(String key) {
+        if (StrUtil.isEmpty(key)) {
+            return null;
+        }
+
+        JSONObject obj = lastFileObj;
+        if (obj.containsKey(key)) {
+            return obj.getString(key);
+        }
+        return null;
+    }
+
+    public String[] readValues(String key) {
+        if (StrUtil.isEmpty(key)) {
+            return null;
+        }
+
+        JSONObject obj = lastFileObj;
+        if (obj.containsKey(key)) {
+            List<String> values = new ArrayList<String>();
+            JSONArray arr = obj.getJSONArray(key);
+            if (arr != null && arr.size() > 0) {
+                for (int i = 0; i < arr.size(); i++) {
+                    values.add(arr.get(i).toString());
+                }
+            }
+
+            if (values.size() > 0) {
+                String[] valueArr = new String[values.size()];
+                values.toArray(valueArr);
+                return valueArr;
+            }
+        }
+        return null;
     }
 }
