@@ -51,7 +51,7 @@ public class PackConfig extends Config {
             if (!EmptyUtil.isEmpty(fileArr)) {
                 for (File file : fileArr) {
                     if (file.getName().trim().equalsIgnoreCase(configFileName)) {
-                        boolean ret = getInst().read(file.getPath(), false);
+                        boolean ret = getInst().readFile(file.getPath(), false);
                         System.out.printf("%s to read config from file: %s\n", ret ? "Success" : "Fail", file.getPath());
                         if (ret) {
                             return true;
@@ -62,7 +62,7 @@ public class PackConfig extends Config {
         }
 
         // Read the packed source
-        boolean ret = getInst().read(configFileName, true);
+        boolean ret = getInst().readFile(configFileName, true);
         System.out.printf("%s to read config from source: %s\n", ret ? "Success" : "Fail", configFileName);
         return ret;
     }
@@ -106,8 +106,8 @@ public class PackConfig extends Config {
     }
 
     @Override
-    public boolean read(String fileName, boolean isResource) {
-        boolean ret = super.read(fileName, isResource);
+    public boolean readFile(String fileName, boolean isResource) {
+        boolean ret = super.readFile(fileName, isResource);
         if (!ret) {
             return ret;
         }

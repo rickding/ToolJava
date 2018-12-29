@@ -5,8 +5,8 @@ import org.junit.Test;
 
 public class PackConfigTest {
     @Test
-    public void testRead() {
-        boolean ret = PackConfig.getInst().read("config.json", true);
+    public void testReadFile() {
+        boolean ret = PackConfig.getInst().readFile("config.json", true);
         Assert.assertEquals(true, ret);
     }
 }

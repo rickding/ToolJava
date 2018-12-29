@@ -80,6 +80,9 @@ public class StrUtil {
             return null;
         }
 
+        // java 8
+//        return String.join(separator, strArray);
+
         StringBuilder sb = new StringBuilder();
         for (String str : strArray) {
             sb.append(separator);

@@ -1,5 +1,5 @@
 # ToolJava
 - Doc parser
-- Pack tool
+- Groovy pack
 - Sql parser
 - Sql updater

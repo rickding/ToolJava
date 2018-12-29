@@ -37,7 +37,7 @@ public class Config {
      * @param isResource
      * @return
      */
-    public boolean read(String fileName, boolean isResource) {
+    public boolean readFile(String fileName, boolean isResource) {
         if (StrUtil.isEmpty(fileName)) {
             return false;
         }
