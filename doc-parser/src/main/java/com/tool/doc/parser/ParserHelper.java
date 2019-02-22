@@ -9,8 +9,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.common.util.StrUtil.eraseHtmlBrace;
+import static com.common.util.StrUtil.isInList;
 
 /**
  * Created by user on 2017/9/23.
@@ -30,21 +32,35 @@ public class ParserHelper {
         // http://www.cnblogs.com/lovebread/archive/2009/11/23/1609122.html
         BufferedReader reader = null;
         try {
-            // table, field
-            Table table = null;
-            DBItem type = null;
-
             reader = new BufferedReader(new FileReader(file));
+
+            // table, field, type
+            Table table = null;
+            DBItem lastItem = null, type = null;
+            boolean sectionStart = false;
 
             // Read and parse
             String str;
-            DBItem lastItem = null;
             while ((str = reader.readLine()) != null) {
                 if (StrUtil.isEmpty(str)) {
                     continue;
                 }
 
-                DBItem item = parse(str.trim());
+                // Check section starts or not
+                str = str.trim();
+                if (!sectionStart && str.endsWith(ParserConfig.SectionStart)) {
+                    sectionStart = true;
+                }
+                if (!sectionStart) {
+                    continue;
+                }
+
+                // Check section ends
+                if (str.endsWith(ParserConfig.SectionEnd)) {
+                    break;
+                }
+
+                DBItem item = parse(str);
                 if (item == null) {
                     continue;
                 }
@@ -53,14 +69,15 @@ public class ParserHelper {
                     table = (Table) item;
                     System.out.println(table.toString());
 
-                    if (!isIgnored(item, ParserConfig.TableIgnoreArr)) {
+                    if (!isInList(item.getName(), ParserConfig.TableIgnoreArr)) {
                         db.addTable(table);
                         lastItem = item;
                     }
                 } else if (item.isType()) {
+                    item.setName(StrUtil.replace(item.getName(), ParserConfig.TypeReplaceMap));
                     type = item;
                 } else if (item.isField()) {
-                    if (!isIgnored(item, ParserConfig.FieldIgnoreArr)) {
+                    if (!isInList(item.name, ParserConfig.FieldIgnoreArr)) {
                         Field field = (Field) item;
                         if (type != null) {
                             field.setType(type.getName());
@@ -98,7 +115,6 @@ public class ParserHelper {
                     reader.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                } finally {
                 }
             }
         }
@@ -208,23 +224,5 @@ public class ParserHelper {
             }
         }
         return eraseHtmlBrace(name);
-    }
-
-    /**
-     * Check if it is ignored
-     *
-     * @param item
-     * @param ignoreNameArr
-     * @return
-     */
-    public static boolean isIgnored(DBItem item, String[] ignoreNameArr) {
-        if (item == null || StrUtil.isEmpty(item.getName()) || EmptyUtil.isEmpty(ignoreNameArr)) {
-            return false;
-        }
-
-        // Check if it should be ignored
-        String name = item.getName();
-        List<String> list = Arrays.asList(ignoreNameArr);
-        return list.contains(name);
     }
 }

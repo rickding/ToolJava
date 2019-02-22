@@ -4,9 +4,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.file.FileUtil;
 import com.common.file.ResourceUtil;
+import com.common.util.EmptyUtil;
 import com.common.util.JsonUtil;
 import com.common.util.StrUtil;
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +36,42 @@ public class Config {
     }
 
     /**
-     * Read config file
+     * Read file: search file and resource
+     */
+    public boolean readFile() {
+        return readFile("config.json");
+    }
+
+    public boolean readFile(String fileName) {
+        return readFile(null, fileName);
+    }
+
+    public boolean readFile(String filePath, String fileName) {
+        // Read from the source folders
+        for (String srcPath : new String[]{filePath, ".\\"}) {
+            File[] fileArr = FileUtil.findFiles(srcPath, fileName);
+            if (!EmptyUtil.isEmpty(fileArr)) {
+                for (File file : fileArr) {
+                    if (file.getName().trim().equalsIgnoreCase(fileName)) {
+                        boolean ret = readFile(file.getPath(), false);
+                        System.out.printf("%s to read config from file: %s\n", ret ? "Success" : "Fail", file.getPath());
+                        if (ret) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Read the packed source
+        boolean ret = readFile(fileName, true);
+        System.out.printf("%s to read config from source: %s\n", ret ? "Success" : "Fail", fileName);
+        return ret;
+    }
+
+    /**
+     * Read config, resource or not
+     *
      * @param fileName
      * @param isResource
      * @return

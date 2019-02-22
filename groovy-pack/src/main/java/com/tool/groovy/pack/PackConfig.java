@@ -1,10 +1,6 @@
 package com.tool.groovy.pack;
 
 import com.common.Config;
-import com.common.file.FileUtil;
-import com.common.util.EmptyUtil;
-
-import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,36 +29,16 @@ public class PackConfig extends Config {
 
     /**
      * Read the config file
+     *
      * @return
      */
     public static boolean init() {
-        return init(null);
-    }
-
-    public static boolean init(String filePath) {
         synchronized (PackConfig.class) {
             inst = null;
         }
 
-        // Read from the source folder
-        for (String srcPath : new String[]{filePath, ".\\"}) {
-            File[] fileArr = FileUtil.findFiles(srcPath, configFileName);
-            if (!EmptyUtil.isEmpty(fileArr)) {
-                for (File file : fileArr) {
-                    if (file.getName().trim().equalsIgnoreCase(configFileName)) {
-                        boolean ret = getInst().readFile(file.getPath(), false);
-                        System.out.printf("%s to read config from file: %s\n", ret ? "Success" : "Fail", file.getPath());
-                        if (ret) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
-        // Read the packed source
-        boolean ret = getInst().readFile(configFileName, true);
-        System.out.printf("%s to read config from source: %s\n", ret ? "Success" : "Fail", configFileName);
+        boolean ret = getInst().readFile(configFileName);
+        System.out.printf("%s to read config: %s\n", ret ? "Success" : "Fail", configFileName);
         return ret;
     }
 

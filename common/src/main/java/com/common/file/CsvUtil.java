@@ -16,15 +16,15 @@ public class CsvUtil {
      * @param recordList
      * @param csvFile
      */
-    public static void saveToFile(List<String[]> recordList, String csvFile) {
+    public static boolean saveToFile(List<String[]> recordList, String csvFile) {
         if (recordList == null || recordList.size() <= 0 || StrUtil.isEmpty(csvFile)) {
-            return;
+            return false;
         }
 
         CsvWriter writer = new CsvWriter(csvFile, ',', Charset.forName("UTF-8"));
         if (null == writer) {
             System.out.printf("Fail to open file: %s\n", csvFile);
-            return;
+            return false;
         }
 
         try {
@@ -36,6 +36,7 @@ public class CsvUtil {
         } finally {
             writer.close();
         }
+        return true;
     }
 
     /**

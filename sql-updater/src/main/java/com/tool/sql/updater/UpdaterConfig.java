@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UpdaterConfig {
-    public static String srcPath = "C:\\Work\\jira-svn\\db\\jiradb_test";
-    public static String dstPath = "C:\\Work\\jira-svn\\db\\jiradb_test_updated";
+    public static String srcPath = "D:\\work\\jira\\db\\jira_db_test";
+    public static String dstPath = "D:\\work\\jira\\db\\jira_db_test_updated";
     public static String fileExt = ".sql";
     public static String ignoredFileName = "_updated.sql";
 

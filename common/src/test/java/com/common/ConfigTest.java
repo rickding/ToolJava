@@ -12,6 +12,6 @@ public class ConfigTest {
 
         Assert.assertEquals(inst.getBoolean("compat"), true);
         Assert.assertEquals(inst.getStr("version"), "0.0.0");
-        Assert.assertEquals(inst.getStrArr("ignoredFileNamePatterns").length, 2);
+        Assert.assertEquals(inst.getStrArr("ignoredFileNamePatterns").length, 1);
     }
 }
