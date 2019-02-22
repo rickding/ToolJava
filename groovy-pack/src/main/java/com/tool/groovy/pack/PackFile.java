@@ -206,9 +206,13 @@ public class PackFile {
                 continue;
             }
 
-            // Check the class name
+            // Check the needed class
             for (String neededFileFlag : neededFileFlagArr) {
                 if (line.startsWith(neededFileFlag)) {
+                    if (compat) {
+                        lineArr[i] = null;
+                    }
+
                     // Get the file name
                     String fileName = line.substring(neededFileFlag.length()).trim();
                     if (!StrUtil.isEmpty(fileName)) {
@@ -238,12 +242,8 @@ public class PackFile {
                         }
                         classNameList.add(className);
                     }
-                    processed = true;
                     break;
                 }
-            }
-            if (processed) {
-                continue;
             }
         }
 
