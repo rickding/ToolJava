@@ -16,6 +16,7 @@ public class PackHelper {
     private String srcPath;
     private String dstPath;
     private String version;
+    private boolean compat;
     private String fileExt;
     private Set<String> ignoredFileNamePatternSet;
     private Set<String> excludeFileNamePatternSet;
@@ -27,6 +28,7 @@ public class PackHelper {
         this.srcPath = config.getSrcPath();
         this.dstPath = config.getDstPath();
         this.version = config.getVersion();
+        this.compat = config.getCompat();
         this.fileExt = config.getFileExt();
 
         ignoredFileNamePatternSet = new HashSet<String>();
@@ -71,7 +73,7 @@ public class PackHelper {
         Map<String, PackFile> fileMap = new HashMap<String, PackFile>();
         for (PackFile file : fileList) {
             // Analyse the information
-            if (file.scan()) {
+            if (file.scan(compat)) {
                 // package + class name
                 String[] classNameArr = file.getClassNameArr();
                 if (!EmptyUtil.isEmpty(classNameArr)) {
@@ -95,7 +97,7 @@ public class PackHelper {
         // Pack secondly
         List<String> fileNameList = new ArrayList<String>();
         for (PackFile file : fileList) {
-            boolean ret = file.pack(fileMap);
+            boolean ret = file.pack(fileMap, compat);
             if (!ret) {
                 fileNameList.add(String.format("Fail to pack: %s", file.toString()));
             }
@@ -112,7 +114,7 @@ public class PackHelper {
             }
             if (!excluded) {
                 String dstFile = FileUtil.getOutputFile(file.getFilePath(), srcPath, dstPath);
-                boolean ret = file.write(dstFile, version);
+                boolean ret = file.write(dstFile, version, compat);
                 fileNameList.add(String.format("%s to write: %s, dst: %s", ret ? "Success" : "Fail", file.toString(), dstFile));
             }
         }

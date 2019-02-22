@@ -28,7 +28,7 @@ public class PackFile {
 
     private final static String packageFlag = "package ";
     private final static String importFlag = "import ";
-    private final static String localImportFlag = "import com.erp.";
+    private final static String[] localImportFlagArr = {"import com.erp.", "import com.se."};
     private final static String[] neededFileFlagArr = {"* Note: need ", "* Note: Need ", "Note: need ", "Note: Need "};
     private final static String[] classFlagArr = {"class ", "public class "};
     private final static String[] classEndingFlagArr = {" ", "{"};
@@ -43,7 +43,7 @@ public class PackFile {
      * @param filePath
      * @return
      */
-    public boolean write(String filePath, String version) {
+    public boolean write(String filePath, String version, boolean compat) {
         if (StrUtil.isEmpty(filePath)) {
             return false;
         }
@@ -54,20 +54,20 @@ public class PackFile {
             System.out.printf("Fail to create output file: %s\n", filePath);
             return false;
         }
-        if (!StrUtil.isEmpty(version)) {
+        if (!compat && !StrUtil.isEmpty(version)) {
             writer.writeLine(String.format("// Version: %s", version));
         }
 
         // Write
         Set<PackFile> writtenFileSet = new HashSet<PackFile>();
-        write(writer, writtenFileSet);
+        write(writer, writtenFileSet, compat);
 
         // Close
         writer.close();
         return true;
     }
 
-    private boolean write(FileWriter writer, Set<PackFile> writtenFileSet) {
+    private boolean write(FileWriter writer, Set<PackFile> writtenFileSet, boolean compat) {
         if (writer == null || !writer.isOpen() || writtenFileSet == null) {
             return false;
         }
@@ -83,19 +83,21 @@ public class PackFile {
         boolean ret = true;
         if (!EmptyUtil.isEmpty(neededFileSet)) {
             for (PackFile file : neededFileSet) {
-                if (!file.write(writer, writtenFileSet)) {
+                if (!file.write(writer, writtenFileSet, compat)) {
                     ret = false;
-                } else {
+                } else if (!compat) {
                     writer.writeLine("");
                 }
             }
         }
 
-        writer.writeLine(String.format("// File: %s.%s", packagePath, fileName));
+        if (!compat) {
+            writer.writeLine(String.format("// File: %s.%s", packagePath, fileName));
+        }
         if (writeItself) {
-            writer.writeLine(headerList);
-            writer.writeLines(lineArr);
-        } else {
+            writer.writeLine(headerList, compat);
+            writer.writeLineArr(lineArr, compat);
+        } else if (!compat) {
             writer.writeLine("// Duplicated, ignore.");
         }
         return ret;
@@ -107,7 +109,7 @@ public class PackFile {
      * @param fileMap
      * @return
      */
-    public boolean pack(Map<String, PackFile> fileMap) {
+    public boolean pack(Map<String, PackFile> fileMap, boolean compat) {
         if (StrUtil.isEmpty(filePath)) {
             return false;
         }
@@ -133,7 +135,9 @@ public class PackFile {
                                 neededFileSet.add(file);
                             }
                         }
-                        headerList.add(String.format("* %sFound: %s%s", found ? "" : "Not ", fileName, duplicated ? " Duplicated" : ""));
+                        if (!compat) {
+                            headerList.add(String.format("* %sFound: %s%s", found ? "" : "Not ", fileName, duplicated ? " Duplicated" : ""));
+                        }
                     }
                 }
             }
@@ -150,7 +154,7 @@ public class PackFile {
      *
      * @return
      */
-    public boolean scan() {
+    public boolean scan(boolean compat) {
         if (StrUtil.isEmpty(filePath)) {
             return false;
         }
@@ -178,26 +182,31 @@ public class PackFile {
             // Check the package
             line = line.trim();
             if (line.startsWith(packageFlag)) {
-                lineArr[i] = String.format("// %s", line);
+                lineArr[i] = compat ? null : String.format("// %s", line);
                 packagePath = line.substring(packageFlag.length()).trim();
                 continue;
             }
 
             // Check the local import
-            if (line.startsWith(localImportFlag)) {
-                // Comment
-                lineArr[i] = String.format("// Pack: %s", line);
+            boolean processed = false;
+            for (String localImportFlag : localImportFlagArr) {
+                if (line.startsWith(localImportFlag)) {
+                    lineArr[i] = compat ? null : String.format("// Pack: %s", line);
 
-                // Get the class path
-                String classPath = line.substring(importFlag.length()).trim();
-                if (!StrUtil.isEmpty(classPath)) {
-                    importedClassPathList.add(classPath);
+                    // Get the class path
+                    String classPath = line.substring(importFlag.length()).trim();
+                    if (!StrUtil.isEmpty(classPath)) {
+                        importedClassPathList.add(classPath);
+                    }
+                    processed = true;
+                    break;
                 }
+            }
+            if (processed) {
                 continue;
             }
 
             // Check the class name
-            boolean processed = false;
             for (String neededFileFlag : neededFileFlagArr) {
                 if (line.startsWith(neededFileFlag)) {
                     // Get the file name
