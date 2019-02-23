@@ -6,12 +6,7 @@ import com.common.util.EmptyUtil;
 import com.common.util.StrUtil;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class PackFile {
     private String fileName;
@@ -32,6 +27,10 @@ public class PackFile {
     private final static String[] neededFileFlagArr = {"* Note: need ", "* Note: Need ", "Note: need ", "Note: Need "};
     private final static String[] classFlagArr = {"class ", "public class "};
     private final static String[] classEndingFlagArr = {" ", "{"};
+    private final static String commentLineFlag = "//";
+    private final static String commentBlockStartFlag = "/**";
+    private final static String commentBlockBodyFlag = "*";
+    private final static String commentBlockEndFlag = "*/";
 
     public PackFile(String filePath) {
         this.filePath = filePath;
@@ -173,13 +172,14 @@ public class PackFile {
         List<String> importedClassPathList = new ArrayList<String>();
         List<String> neededFileNameList = new ArrayList<String>();
         List<String> classNameList = new ArrayList<String>();
+        boolean isCommentBlock = false;
         for (int i = 0; i < lineArr.length; i++) {
             String line = lineArr[i];
             if (StrUtil.isEmpty(line)) {
                 continue;
             }
 
-            // Check the package
+            // Check package name
             line = line.trim();
             if (line.startsWith(packageFlag)) {
                 lineArr[i] = compat ? null : String.format("// %s", line);
@@ -187,7 +187,7 @@ public class PackFile {
                 continue;
             }
 
-            // Check the local import
+            // Check local import
             boolean processed = false;
             for (String localImportFlag : localImportFlagArr) {
                 if (line.startsWith(localImportFlag)) {
@@ -206,7 +206,7 @@ public class PackFile {
                 continue;
             }
 
-            // Check the needed class
+            // Check needed class
             for (String neededFileFlag : neededFileFlagArr) {
                 if (line.startsWith(neededFileFlag)) {
                     if (compat) {
@@ -226,7 +226,7 @@ public class PackFile {
                 continue;
             }
 
-            // Check the class name
+            // Check class name
             for (String classFlag : classFlagArr) {
                 if (line.startsWith(classFlag)) {
                     // Get the class name
@@ -242,7 +242,28 @@ public class PackFile {
                         }
                         classNameList.add(className);
                     }
+                    processed = true;
                     break;
+                }
+            }
+            if (processed) {
+                continue;
+            }
+
+            // Check comment
+            if (compat) {
+                if (line.startsWith(commentLineFlag)) {
+                    lineArr[i] = null;
+                } else if (!isCommentBlock) {
+                    isCommentBlock = line.startsWith(commentBlockStartFlag);
+                    if (isCommentBlock) {
+                        lineArr[i] = null;
+                    }
+                } else if (line.endsWith(commentBlockEndFlag)) {
+                    isCommentBlock = false;
+                    lineArr[i] = null;
+                } else if (line.startsWith(commentBlockBodyFlag)) {
+                    lineArr[i] = null;
                 }
             }
         }
