@@ -16,6 +16,29 @@ import java.util.Map;
  */
 public class DateUtilTest {
     @Test
+    public void testGetAge() {
+        Map<String, Integer> mapIO = new HashMap<String, Integer>() {{
+            put("", null);
+            put("", null);
+            put("yyyy/MM/dd HH:mm", null);
+            put("2037-12-07", null);
+            put("2007-12-23", 11);
+            put("2007-08-30", 11);
+            put("2007-02-25", 12);
+            put("2007-02-26", 12);
+            put("2007-02-27", 11);
+            put(DateUtil.format(DateUtil.adjustDate(DateUtil.getToday(), -1), "yyyy-MM-dd"), 1);
+            put(DateUtil.format(DateUtil.getToday(), "yyyy-MM-dd"), 1);
+            put(DateUtil.format(DateUtil.adjustDate(DateUtil.getToday(), 1), "yyyy-MM-dd"), null);
+        }};
+
+        for (Map.Entry<String, Integer> io : mapIO.entrySet()) {
+            Integer ret = DateUtil.getAge(io.getKey());
+            Assert.assertEquals(io.getValue(), ret);
+        }
+    }
+
+    @Test
     public void testGetSprintDate() {
         Map<String, String> mapIO = new HashMap<String, String>() {{
             put(null, "");
@@ -101,6 +124,30 @@ public class DateUtilTest {
 
         for (Map.Entry<String, Integer> io : mapIO.entrySet()) {
             int ret = DateUtil.dayOfWeek(io.getKey());
+            Assert.assertEquals(io.getValue().intValue(), ret);
+        }
+    }
+
+    @Test
+    public void testDiffMonth() {
+        Map<String[], Integer> mapIO = new HashMap<String[], Integer>() {{
+//            put(new String[]{null, ""}, 0);
+//            put(new String[]{"", ""}, 0);
+//            put(new String[]{"", "yyyy/MM/dd HH:mm"}, 0);
+//            put(new String[]{"2017-12-07 18:00", null}, 0);
+//            put(new String[]{"2017-12-09 18:00", "2017-12-09 12:00"}, 0);
+//            put(new String[]{"2017-12-07", "2017-12-09"}, -1);
+//            put(new String[]{"2018-01-02", "2017-12-30"}, 1);
+//            put(new String[]{"2019-01-26", "2019-02-24"}, -1);
+            put(new String[]{"2019-02-26", "2019-02-24"}, 1);
+            put(new String[]{"2019-02-26", "2019-01-26"}, 1);
+            put(new String[]{"2019-02-26", "2019-02-26"}, 0);
+            put(new String[]{"2019-02-26", "2017-11-16"}, 16);
+        }};
+
+        for (Map.Entry<String[], Integer> io : mapIO.entrySet()) {
+            String[] params = io.getKey();
+            int ret = DateUtil.diffMonth(params[0], params[1]);
             Assert.assertEquals(io.getValue().intValue(), ret);
         }
     }

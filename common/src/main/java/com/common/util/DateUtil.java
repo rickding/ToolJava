@@ -11,6 +11,29 @@ import java.util.Date;
  * Created by user on 2017/9/23.
  */
 public class DateUtil {
+    public static Integer getAge(String dateStr) {
+        return dateStr == null || dateStr.length() <= 0 ? null : getAge(parse(dateStr, "yyyy-MM-dd"));
+    }
+
+    public static Integer getAge(Date date) {
+        if (date == null) { return null; }
+
+        String strStart = format(date, "yyyy-MM-dd");
+        int yearStart = Integer.valueOf(strStart.substring(0, 4));
+        int monthStart = Integer.valueOf(strStart.substring(5, 7));
+        int dayStart = Integer.valueOf(strStart.substring(8, 10));
+
+        String strEnd = format(new Date(), "yyyy-MM-dd");
+        int yearEnd = Integer.valueOf(strEnd.substring(0, 4));
+        int monthEnd = Integer.valueOf(strEnd.substring(5, 7));
+        int dayEnd = Integer.valueOf(strEnd.substring(8, 10));
+
+        int age = yearEnd - yearStart;
+        if (age < 0) { return null; }
+        else if (monthEnd > monthStart || monthEnd == monthStart && dayEnd >= dayStart) { age += 1; }
+        return age < 1 ? null : (age == 1 ? age : age - 1);
+    }
+
     public static String getTodayStr() {
         return getTodayStr("MMdd");
     }
@@ -94,6 +117,27 @@ public class DateUtil {
             return 0;
         }
         return (int) ((d1.getTime() - d2.getTime()) / (1000 * 3600 * 24));
+    }
+
+    public static Integer diffMonth(String date1, String date2) {
+        return diffMonth(DateUtil.parse(date1, "yyyy-MM-dd"), DateUtil.parse(date2, "yyyy-MM-dd"));
+    }
+
+    public static Integer diffMonth(Date d1, Date d2) {
+        if (d1 == null || d2 == null) {
+            return null;
+        }
+
+        String strStart = format(d2, "yyyy-MM-dd");
+        int yearStart = Integer.valueOf(strStart.substring(0, 4));
+        int monthStart = Integer.valueOf(strStart.substring(5, 7));
+        int dayStart = Integer.valueOf(strStart.substring(8, 10));
+
+        String strEnd = format(d1, "yyyy-MM-dd");
+        int yearEnd = Integer.valueOf(strEnd.substring(0, 4));
+        int monthEnd = Integer.valueOf(strEnd.substring(5, 7));
+        int dayEnd = Integer.valueOf(strEnd.substring(8, 10));
+        return (yearEnd - yearStart) * 12 + monthEnd - monthStart + (dayEnd > dayStart ? 1 : (dayEnd == dayStart ? 0 : -1));
     }
 
     public static int dayOfWeek(String strDate) {
