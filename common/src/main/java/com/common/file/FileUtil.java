@@ -187,7 +187,9 @@ public class FileUtil {
 
         // Append the file name directly
         String fileName = getFileName(srcFile, srcPath);
-        String dstFile = String.format("%s%s%s%s", dstPath, dstPath.endsWith("\\") || fileName.startsWith("\\") ? "" : "\\", fileName, postfix);
+        String pathSeparator = dstPath.endsWith("\\") || fileName.startsWith("\\")
+                || dstPath.endsWith("/") || fileName.startsWith("/") ? "" : "/";
+        String dstFile = String.format("%s%s%s%s", dstPath, pathSeparator, fileName, postfix);
         if (srcFile.trim().equalsIgnoreCase(dstFile.trim())) {
             dstFile = String.format("%s%s", dstFile, StrUtil.isEmpty(postfix) ? "_pack" : postfix);
         }

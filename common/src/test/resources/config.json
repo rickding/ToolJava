@@ -5,7 +5,8 @@
   "compat": true,
   "fileExt": ".groovy",
   "ignoredFileNamePatterns": [
-    "\\w*[Tt][Ee][Ss][Tt].groovy"
+    "\\w*[Tt][Ee][Ss][Tt].groovy",
+    "[Tt][Ee][Ss][Tt]\\w*.groovy"
   ],
   "excludeFileNamePatterns": [
     "\\w*[Uu]tils*.groovy",

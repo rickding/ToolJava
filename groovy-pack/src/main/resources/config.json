@@ -1,12 +1,10 @@
 {
-  "srcPath": "D:\\Work\\jira\\scriptrunner-samples\\jira\\src\\main\\groovy",
-  "dstPath": "D:\\Work\\jira\\deploy\\jira",
+  "srcPath": "/data/work/jira/scriptrunner-samples/jira/src/main/groovy",
+  "dstPath": "/data/work/jira/deploy/jira",
   "version": "0.0.1",
   "compat": true,
   "fileExt": ".groovy",
   "ignoredFileNamePatterns": [
-    "\\w*[Tt][Ee][Ss][Tt].groovy",
-    "[Tt][Ee][Ss][Tt]\\w*.groovy"
   ],
   "excludeFileNamePatterns": [
     "\\w*[Uu]tils*.groovy",
@@ -15,6 +13,20 @@
     "Team.groovy",
     "Plan.groovy",
     "IssueItem.groovy",
-    "IssueLinks*.groovy"
+    "IssueLinks*.groovy",
+    "Version.groovy",
+    "StructureConst.groovy",
+    "StructureData.groovy",
+    "Feature.groovy",
+    "StructureProject.groovy",
+    "WorkLogConst.groovy",
+    "WorkLogItem.groovy",
+    "WorkLogData.groovy",
+    "UserData.groovy",
+    "UserSalary.groovy",
+    "FinanceConst.groovy",
+    "FinanceData.groovy",
+    "Transaction.groovy",
+    "PurchaseData.groovy"
   ]
 }

@@ -48,7 +48,7 @@ public class Config {
 
     public boolean readFile(String filePath, String fileName) {
         // Read from the source folders
-        for (String srcPath : new String[]{filePath, ".\\"}) {
+        for (String srcPath : new String[]{filePath, "./"}) {
             File[] fileArr = FileUtil.findFiles(srcPath, fileName);
             if (!EmptyUtil.isEmpty(fileArr)) {
                 for (File file : fileArr) {
