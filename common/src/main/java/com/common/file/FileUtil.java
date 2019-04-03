@@ -152,7 +152,7 @@ public class FileUtil {
 
             // Remove the base path
             basePath = basePath.trim().toLowerCase();
-            int index = filePath.toLowerCase().indexOf(basePath);
+            int index = filePath.toLowerCase().replace("\\", "/").indexOf(basePath.replace("\\", "/"));
             if (index >= 0) {
                 fileName = filePath.substring(index + basePath.length());
             }
