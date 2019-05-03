@@ -27,10 +27,15 @@ public class PackFile {
     private final static String[] neededFileFlagArr = {"* Note: need ", "* Note: Need ", "Note: need ", "Note: Need "};
     private final static String[] classFlagArr = {"class ", "public class "};
     private final static String[] classEndingFlagArr = {" ", "{"};
+
     private final static String commentLineFlag = "//";
     private final static String commentBlockStartFlag = "/**";
     private final static String commentBlockBodyFlag = "*";
     private final static String commentBlockEndFlag = "*/";
+    private final static String[] logFlagArr = {
+            "log?.info", "log?.warn", "log.info", "log.warn",
+            "Logger l = log", "l.setLevel(Level."
+    };
 
     public PackFile(String filePath) {
         this.filePath = filePath;
@@ -250,8 +255,20 @@ public class PackFile {
                 continue;
             }
 
-            // Check comment
             if (compat) {
+                // Check log
+                for (String logFlag : logFlagArr) {
+                    if (line.startsWith(logFlag)) {
+                        lineArr[i] = null;
+                        processed = true;
+                        break;
+                    }
+                }
+                if (processed) {
+                    continue;
+                }
+
+                // Check comment and block
                 if (line.startsWith(commentLineFlag)) {
                     lineArr[i] = null;
                 } else if (!isCommentBlock) {

@@ -11,20 +11,16 @@
     "\\w*[Hh]elper.groovy",
     "\\w*[Cc]onfig.groovy",
     "\\w*[Cc]onst.groovy",
+    "\\w*[Dd]ata.groovy",
     "Team.groovy",
     "Plan.groovy",
     "IssueItem.groovy",
     "IssueLinks*.groovy",
     "Version.groovy",
-    "StructureData.groovy",
     "Feature.groovy",
     "StructureProject.groovy",
     "WorkLogItem.groovy",
-    "WorkLogData.groovy",
-    "UserData.groovy",
     "UserSalary.groovy",
-    "FinanceData.groovy",
-    "Transaction.groovy",
-    "PurchaseData.groovy"
+    "Transaction.groovy"
   ]
 }
